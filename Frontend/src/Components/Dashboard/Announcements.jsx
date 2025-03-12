@@ -4,49 +4,133 @@ import { TextField, Button, Card, CardContent, Typography, Grid } from "@mui/mat
 
 const Announcements = () => {
   const [announcements, setAnnouncements] = useState([]);
-  const [newAnnouncement, setNewAnnouncement] = useState({ title: "", description: "" });
+  const [newAnnouncement, setNewAnnouncement] = useState("");
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+  const [editText, setEditText] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/announcements")
-      .then(res => setAnnouncements(res.data))
-      .catch(err => console.error(err));
+    axios.get("/api/admin/announcements")
+      .then(res => {
+        console.log("Fetched data:", res.data);
+        const data = Array.isArray(res.data) ? res.data : res.data.announcements || [];
+        setAnnouncements(data);
+      })
+      .catch(err => console.error("Error fetching announcements:", err));
   }, []);
 
   const addAnnouncement = () => {
-    axios.post("http://localhost:5000/api/announcements", newAnnouncement)
-      .then(res => setAnnouncements([...announcements, res.data]))
-      .catch(err => console.error(err));
+    if (!newAnnouncement.trim()) return;
+
+    axios.post("/api/admin/announcements", { text: newAnnouncement })
+      .then(res => {
+        setAnnouncements(prev => [...prev, res.data.announcement]);
+        setNewAnnouncement("");
+      })
+      .catch(err => console.error("Error adding announcement:", err));
   };
 
   const deleteAnnouncement = (id) => {
-    axios.delete(`http://localhost:5000/api/announcements/${id}`)
-      .then(() => setAnnouncements(announcements.filter(a => a._id !== id)))
-      .catch(err => console.error(err));
+    axios.delete(`/api/admin/announcements/${id}`)
+      .then(() => setAnnouncements(prev => prev.filter(a => a._id !== id)))
+      .catch(err => console.error("Error deleting announcement:", err));
+  };
+
+  const startEditing = (announcement) => {
+    setEditingAnnouncement(announcement._id);
+    setEditText(announcement.text);
+  };
+
+  const updateAnnouncement = (id) => {
+    if (!editText.trim()) return;
+
+    axios.put(`/api/admin/announcements/${id}`, { text: editText })
+      .then(res => {
+        setAnnouncements(prev =>
+          prev.map(a => (a._id === id ? { ...a, text: editText } : a))
+        );
+        setEditingAnnouncement(null);
+        setEditText("");
+      })
+      .catch(err => console.error("Error updating announcement:", err));
   };
 
   return (
     <div>
       <Typography variant="h5">Manage Announcements</Typography>
 
-      <TextField label="Title" fullWidth value={newAnnouncement.title} 
-        onChange={e => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })} />
-      <TextField label="Description" fullWidth value={newAnnouncement.description} 
-        onChange={e => setNewAnnouncement({ ...newAnnouncement, description: e.target.value })} />
-      <Button variant="contained" sx={{ mt: 2 }} onClick={addAnnouncement}>Add Announcement</Button>
+      {/* Notice Input Field */}
+      <TextField
+        label="Announcement"
+        fullWidth
+        value={newAnnouncement}
+        onChange={(e) => setNewAnnouncement(e.target.value)}
+        sx={{ mt: 2 }}
+      />
 
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {announcements.map((ann) => (
-          <Grid item xs={12} md={6} key={ann._id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{ann.title}</Typography>
-                <Typography>{ann.description}</Typography>
-                <Button variant="outlined" color="error" onClick={() => deleteAnnouncement(ann._id)}>Delete</Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <Button
+        variant="contained"
+        sx={{ mt: 2 }}
+        onClick={addAnnouncement}
+        disabled={!newAnnouncement.trim()}
+      >
+        Add Announcement
+      </Button>
+
+      {/* Display Announcements */}
+      {announcements.length === 0 ? (
+        <Typography sx={{ mt: 2, color: "gray" }}>No announcements available.</Typography>
+      ) : (
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          {announcements.map((ann) => (
+            <Grid item xs={12} key={ann._id}>
+              <Card>
+                <CardContent>
+                  {editingAnnouncement === ann._id ? (
+                    <TextField
+                      fullWidth
+                      multiline
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      sx={{ mt: 1 }}
+                    />
+                  ) : (
+                    <Typography variant="h6">{ann.text}</Typography>
+                  )}
+
+                  <div style={{ marginTop: "10px" }}>
+                    {editingAnnouncement === ann._id ? (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => updateAnnouncement(ann._id)}
+                        sx={{ mr: 1 }}
+                      >
+                        Save
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => startEditing(ann)}
+                        sx={{ mr: 1 }}
+                      >
+                        Edit
+                      </Button>
+                    )}
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => deleteAnnouncement(ann._id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </div>
   );
 };

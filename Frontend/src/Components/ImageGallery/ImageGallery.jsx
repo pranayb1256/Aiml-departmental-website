@@ -1,35 +1,54 @@
+import { useEffect } from "react";
+import Masonry from "react-masonry-css";
+import useGalleryStore from "../../store/useGalleryStore"; // Zustand Store
+
 const ImageGallery = () => {
-  const images = [
-    { src: "/images/Student_Image/IMG_5030.jpg", size: "row-span-2 col-span-1" },
-    { src: "/images/Student_Image/IMG_5031.jpg", size: "row-span-1 col-span-1" },
-    { src: "/images/Student_Image/IMG_5032.jpg", size: "row-span-1 col-span-2" },
-    { src: "/images/Student_Image/IMG_5046.jpg", size: "row-span-2 col-span-1" },
-    { src: "/images/Student_Image/IMG_5067.jpg", size: "row-span-1 col-span-1" },
-    { src: "/images/Student_Image/IMG_5860.jpg", size: "row-span-1 col-span-2" },
-  ];
+  const { images, loading, error, fetchImages } = useGalleryStore();
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
+  const breakpointColumnsObj = {
+    default: 4,
+    1100: 3,
+    768: 2,
+    480: 1,
+  };
 
   return (
-    <section className="py-12 bg-gray-100">
-      <div className="max-w-5xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <section className="py-12 bg-white">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center text-gray-800 mb-6">
           Student <span className="text-blue-500">Gallery</span>
         </h2>
 
-        {/* Masonry Grid Layout */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[150px] md:auto-rows-[180px] gap-3">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`relative group overflow-hidden rounded-lg shadow-md ${image.size}`}
-            >
-              <img
-                src={image.src}
-                alt={`Student Event ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-              />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <p className="text-center text-gray-500 animate-pulse">Loading images...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="flex gap-4"
+            columnClassName="masonry-column"
+          >
+            {images.map((image, index) => (
+              <div
+                key={index}
+                className="relative group overflow-hidden rounded-lg shadow-md mb-4 transform transition-all duration-300 hover:scale-105"
+              >
+                <img
+                  src={image}
+                  alt={`Student Event ${index + 1}`}
+                  className="w-full h-auto object-cover rounded-lg"
+                  loading="lazy"
+                  onError={(e) => (e.target.src = "/fallback.jpg")} // Fallback Image
+                />
+              </div>
+            ))}
+          </Masonry>
+        )}
       </div>
     </section>
   );

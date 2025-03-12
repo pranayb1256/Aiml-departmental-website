@@ -14,6 +14,8 @@ import {
     createEvent,
     updateEvent,
     deleteEvent,
+    deleteNotice,
+    deleteAnnouncement,
     //faculty
     // getAllFaculty,
     // createFaculty,
@@ -33,10 +35,12 @@ router.post("/logout", authenticateToken, logoutAdmin);
 // Announcements routes (recheck this funcs in admin store)
 router.get("/announcements", getAllAnnouncements);
 router.post("/announcements", authenticateToken, addAnnouncement);
+router.delete("/announcements/:id", authenticateToken,deleteAnnouncement)
 
 // Notices routes
 router.get("/notices", getAllNotices);
 router.post("/notices", authenticateToken, addNotice);
+router.delete("/notices/:id", authenticateToken,deleteNotice)
 
 //club events routes
 router.get("/getAllEvents", getAllEvents);

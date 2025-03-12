@@ -134,7 +134,6 @@ export const getAllAnnouncements = asyncHandler(async (req, res) => {
 
 export const addAnnouncement = asyncHandler(async (req, res) => {
 
-
     const { text } = req.body;
 
     if (!text) {
@@ -149,6 +148,23 @@ export const addAnnouncement = asyncHandler(async (req, res) => {
     // res.status(201).json(new ApiResponse(201, announcement, "Announcement added successfully!"));
 })
 
+export const deleteAnnouncement = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    // Validate MongoDB ObjectId before querying
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new ApiError(400, "Invalid notice ID format");
+    }
+
+    const announcement = await Announcement.findByIdAndDelete(id);
+    if (!announcement) {
+        throw new ApiError(404, "announcement not found");
+    }
+
+    res.status(200).json({ success: true, message: "announcement deleted successfully" });
+});
+
+
+
 //Notices
 export const getAllNotices = asyncHandler(async (req, res) => {
 
@@ -158,21 +174,36 @@ export const getAllNotices = asyncHandler(async (req, res) => {
     // res.status(200).json(new ApiResponse(200, notices, "Fetched notices successfully!"));
 })
 
+// Add a new notice
 export const addNotice = asyncHandler(async (req, res) => {
-
     const { text } = req.body;
 
-    if (!text) {
-        throw new ApiError(400, "Notice text is required");
+    if (!text || typeof text !== "string" || !text.trim()) {
+        throw new ApiError(400, "Notice text is required and must be a non-empty string");
     }
 
     const notice = new Notice({ text });
-
     await notice.save();
 
-    res.status(201).json({ notice });
-    // res.status(201).json(new ApiResponse(201, notice, "Notice added successfully!"));
-})
+    res.status(201).json({ success: true, notice });
+});
+
+// Delete a notice
+export const deleteNotice = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    // Validate MongoDB ObjectId before querying
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new ApiError(400, "Invalid notice ID format");
+    }
+
+    const notice = await Notice.findByIdAndDelete(id);
+    if (!notice) {
+        throw new ApiError(404, "Notice not found");
+    }
+
+    res.status(200).json({ success: true, message: "Notice deleted successfully" });
+});
 
 //---------------------------------------=------=------=------=-----------------------------------------//
 
