@@ -45,7 +45,6 @@ export const handleImage = asyncHandler(async (req, res) => {
         homepageEvent,
     });
 
-    console.log(img);
     res.status(200).json(new ApiResponse(200, img, "Successfully stored array of urls in DB!"));
 });
 
@@ -59,7 +58,8 @@ export const getImages = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Imgs not found")
     }
 
-    res.status(200).json(new ApiResponse(200, images, "Images retrieved successfully"));
+    res.status(200).json({ images, message: "Images retrieved successfully!" });
+    // res.status(200).json(new ApiResponse(200, images, "Images retrieved successfully"));
 });
 
 //Alumni Corner
@@ -91,7 +91,8 @@ export const createAlumni = asyncHandler(async (req, res) => {
         photo: uploadResponse.secure_url
     });
 
-    return res.status(201).json(new ApiResponse(201, newAlumni, "Successfully Added new Alumni"))
+    res.status(200).json({ newAlumni, message: "Successfully Added new Alumni!" });
+    // return res.status(201).json(new ApiResponse(201, newAlumni, "Successfully Added new Alumni"))
 })
 
 export const deleteAlumni = asyncHandler(async (req, res) => {
@@ -114,5 +115,6 @@ export const deleteAlumni = asyncHandler(async (req, res) => {
 
     await Alumni.findByIdAndDelete(alumniId);
 
-    return res.status(200).json(new ApiResponse(200, null, "Alumni deleted successfully"))
+    res.status(200).json({ message: "Alumni deleted successfully!" });
+    // return res.status(200).json(new ApiResponse(200, null, "Alumni deleted successfully"))
 })

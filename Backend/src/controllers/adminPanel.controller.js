@@ -128,7 +128,7 @@ export const getAllAnnouncements = asyncHandler(async (req, res) => {
 
     const announcements = await Announcement.find().sort({ createdAt: -1 });
 
-    res.status(201).json({announcements});
+    res.status(201).json({ announcements });
     // res.status(200).json(new ApiResponse(200, announcements, "Fetched notices successfully!"));
 })
 
@@ -145,7 +145,7 @@ export const addAnnouncement = asyncHandler(async (req, res) => {
 
     await announcement.save();
 
-    res.status(201).json({announcement});
+    res.status(201).json({ announcement });
     // res.status(201).json(new ApiResponse(201, announcement, "Announcement added successfully!"));
 })
 
@@ -154,7 +154,7 @@ export const getAllNotices = asyncHandler(async (req, res) => {
 
     const notices = await Notice.find().sort({ createdAt: -1 });
 
-    res.status(201).json({notices});
+    res.status(201).json({ notices });
     // res.status(200).json(new ApiResponse(200, notices, "Fetched notices successfully!"));
 })
 
@@ -170,7 +170,7 @@ export const addNotice = asyncHandler(async (req, res) => {
 
     await notice.save();
 
-    res.status(201).json({notice});
+    res.status(201).json({ notice });
     // res.status(201).json(new ApiResponse(201, notice, "Notice added successfully!"));
 })
 
@@ -184,7 +184,8 @@ export const getAllEvents = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Zero events found | use add clubevents btn to add new events");
     }
 
-    res.status(200).json(new ApiResponse(200, events, "Fetched all clubs successfully!"));
+    res.status(200).json({ events, message: "Fetched all clubs successfully!" });
+    // res.status(200).json(new ApiResponse(200, events, "Fetched all clubs successfully!"));
 })
 
 export const createEvent = asyncHandler(async (req, res) => {
@@ -218,7 +219,9 @@ export const createEvent = asyncHandler(async (req, res) => {
     });
 
     await newEvent.save();
-    res.status(201).json(new ApiResponse(200, newEvent, "New Club created successfully!"));
+
+    res.status(201).json({ newEvent, message: "New Club created successfully!" });
+    // res.status(201).json(new ApiResponse(200, newEvent, "New Club created successfully!"));
 })
 
 //update event not working
@@ -246,7 +249,8 @@ export const updateEvent = asyncHandler(async (req, res) => {
 
     const updatedEvent = await event.save();
 
-    res.status(200).json(new ApiResponse(200, updatedEvent, "Updated club successfully"));
+    res.status(200).json({ updatedEvent, message: "Updated club successfully!" });
+    // res.status(200).json(new ApiResponse(200, updatedEvent, "Updated club successfully"));
 })
 
 export const deleteEvent = asyncHandler(async (req, res) => {
@@ -269,7 +273,8 @@ export const deleteEvent = asyncHandler(async (req, res) => {
     //delete club with given id
     await Event.findByIdAndDelete(eventId);
 
-    res.status(200).json(new ApiResponse(200, null, "event deleted successfully"));
+    res.status(200).json({ message: "Event deleted successfully!" });
+    // res.status(200).json(new ApiResponse(200, null, "event deleted successfully"));
 })
 
 //---------------------------------------=------=------=------=-----------------------------------------//
