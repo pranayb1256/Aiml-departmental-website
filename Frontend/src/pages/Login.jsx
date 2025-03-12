@@ -1,0 +1,133 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  CircularProgress,
+  Link,
+} from "@mui/material";
+
+const Auth = () => {
+  const [isRegister, setIsRegister] = useState(false);
+  const [credentials, setCredentials] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+    adminid: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!credentials.email || !credentials.password || !credentials.adminid || (isRegister && !credentials.fullname)) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const endpoint = isRegister ? "api/admin/register" : "api/admin/login";
+      const res = await axios.post(endpoint, credentials);
+
+      if (res.data.success) {
+        if (isRegister) {
+          setIsRegister(false); // Switch to login after successful registration
+        } else {
+          localStorage.setItem("token", res.data.token);
+          navigate("/dashboard");
+        }
+      } else {
+        setError(res.data.message || "An error occurred. Please try again.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Error connecting to server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" height="100vh" bgcolor="#f5f5f5">
+      <Card sx={{ width: 400, padding: 4, boxShadow: 3 }}>
+        <CardContent>
+          <Typography variant="h5" textAlign="center" gutterBottom>
+            {isRegister ? "Admin Register" : "Admin Login"}
+          </Typography>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            {isRegister && (
+              <TextField
+                label="Full Name"
+                fullWidth
+                margin="normal"
+                value={credentials.fullname}
+                onChange={(e) => setCredentials({ ...credentials, fullname: e.target.value })}
+              />
+            )}
+            <TextField
+              label="Email"
+              fullWidth
+              margin="normal"
+              value={credentials.email}
+              onChange={(e) => setCredentials({ ...credentials, email: e.target.value.trim() })}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={credentials.password}
+              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+            />
+            <TextField
+              label="Admin ID"
+              fullWidth
+              margin="normal"
+              value={credentials.adminid}
+              onChange={(e) => setCredentials({ ...credentials, adminid: e.target.value })}
+            />
+            {error && (
+              <Typography color="error" textAlign="center" mt={1}>
+                {error}
+              </Typography>
+            )}
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ mt: 2 }}
+              type="submit"
+              disabled={loading || !credentials.email || !credentials.password || !credentials.adminid || (isRegister && !credentials.fullname)}
+            >
+              {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : isRegister ? "Register" : "Login"}
+            </Button>
+          </form>
+          <Typography textAlign="center" mt={2}>
+            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+            <Link
+              component="button"
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError(""); // Clear error when switching
+                setCredentials({ fullname: "", email: "", password: "", adminid: "" }); // Reset fields
+              }}
+            >
+              {isRegister ? "Login" : "Register"}
+            </Link>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
+
+export default Auth;
