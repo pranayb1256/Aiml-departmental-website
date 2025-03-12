@@ -39,10 +39,10 @@ router.get("/notices", getAllNotices);
 router.post("/notices", addNotice);
 
 //club events routes
-router.get("/getAllEvents", authenticateToken, getAllEvents);
-router.post("/createEvent", authenticateToken, upload.array('images', 4), createEvent);
-router.put("/updateEvent/:id", authenticateToken, updateEvent); // not working
-router.delete("/deleteEvent/:id", authenticateToken, deleteEvent);
+router.get("/getAllEvents", getAllEvents);
+router.post("/createEvent", upload.array('images', 4), createEvent);
+router.put("/updateEvent/:id", updateEvent); // not working
+router.delete("/deleteEvent/:id", deleteEvent);
 
 //faculty routes (on hold )
 // router.get("/getAllFaculty", authenticateToken, getAllFaculty);
