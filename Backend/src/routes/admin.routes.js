@@ -32,17 +32,17 @@ router.post("/logout", authenticateToken, logoutAdmin);
 
 // Announcements routes (recheck this funcs in admin store)
 router.get("/announcements", getAllAnnouncements);
-router.post("/announcements", addAnnouncement);
+router.post("/announcements", authenticateToken, addAnnouncement);
 
 // Notices routes
 router.get("/notices", getAllNotices);
-router.post("/notices", addNotice);
+router.post("/notices", authenticateToken, addNotice);
 
 //club events routes
-router.get("/getAllEvents", authenticateToken, getAllEvents);
+router.get("/getAllEvents", getAllEvents);
 router.post("/createEvent", authenticateToken, upload.array('images', 4), createEvent);
-router.put("/updateEvent/:id", authenticateToken, updateEvent); // not working
-router.delete("/deleteEvent/:id", authenticateToken, deleteEvent);
+router.put("/updateEvent/:id", updateEvent); // not working
+router.delete("/deleteEvent/:id", deleteEvent);
 
 //faculty routes (on hold )
 // router.get("/getAllFaculty", authenticateToken, getAllFaculty);
