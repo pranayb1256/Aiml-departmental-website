@@ -7,7 +7,10 @@ export default function Announce() {
   useEffect(() => {
     fetch("/api/admin/announcements")
       .then((res) => res.json())
-      .then((data) => setAnnouncements(data))
+      .then((data) => {
+        console.log("Fetched data:", data); // Debugging
+        setAnnouncements(Array.isArray(data) ? data : data.announcements || []);
+      })
       .catch((err) => console.error("Error fetching announcements:", err));
   }, []);
 
@@ -23,20 +26,24 @@ export default function Announce() {
       </motion.h2>
 
       {/* Marquee for Latest Announcements */}
-      <div className="overflow-hidden bg-blue-600 text-white py-2 rounded-md shadow-md">
-        <motion.div
-          className="flex space-x-8 whitespace-nowrap animate-marquee"
-          initial={{ x: "100%" }}
-          animate={{ x: "-100%" }}
-          transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-        >
-          {announcements.slice(0, 5).map((announcement, index) => (
-            <span key={index} className="text-sm font-medium mx-6">
-              🔔 {announcement.text}
-            </span>
-          ))}
-        </motion.div>
-      </div>
+      {announcements.length > 0 ? (
+        <div className="overflow-hidden bg-blue-600 text-white py-2 rounded-md shadow-md">
+          <motion.div
+            className="flex space-x-8 whitespace-nowrap animate-marquee"
+            initial={{ x: "100%" }}
+            animate={{ x: "-100%" }}
+            transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+          >
+            {announcements.slice(0, 5).map((announcement, index) => (
+              <span key={index} className="text-sm font-medium mx-6">
+                🔔 {announcement.text}
+              </span>
+            ))}
+          </motion.div>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">No announcements available.</p>
+      )}
 
       {/* Announcements Grid */}
       <motion.div

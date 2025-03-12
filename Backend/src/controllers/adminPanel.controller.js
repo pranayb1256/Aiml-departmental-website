@@ -125,19 +125,15 @@ export const logoutAdmin = async (req, res) => {
 
 //Announcements 
 export const getAllAnnouncements = asyncHandler(async (req, res) => {
-    if (!req.admin) {
-        throw new ApiError(403, "Unauthorized access")
-    }
 
     const announcements = await Announcement.find().sort({ createdAt: -1 });
 
-    res.status(200).json(new ApiResponse(200, announcements, "Fetched notices successfully!"));
+    res.status(201).json({announcements});
+    // res.status(200).json(new ApiResponse(200, announcements, "Fetched notices successfully!"));
 })
 
 export const addAnnouncement = asyncHandler(async (req, res) => {
-    if (!req.admin) {
-        throw new ApiError(403, "Unauthorized access");
-    }
+
 
     const { text } = req.body;
 
@@ -149,26 +145,20 @@ export const addAnnouncement = asyncHandler(async (req, res) => {
 
     await announcement.save();
 
+    res.status(201).json({announcement});
     // res.status(201).json(new ApiResponse(201, announcement, "Announcement added successfully!"));
-    res.status(200).json({announcement})
 })
 
 //Notices
 export const getAllNotices = asyncHandler(async (req, res) => {
-    if (!req.admin) {
-        throw new ApiError(403, "Unauthorized access");
-    }
 
     const notices = await Notice.find().sort({ createdAt: -1 });
 
+    res.status(201).json({notices});
     // res.status(200).json(new ApiResponse(200, notices, "Fetched notices successfully!"));
-    res.status(200).json({notices})
 })
 
 export const addNotice = asyncHandler(async (req, res) => {
-    if (!req.admin) {
-        throw new ApiError(403, "Unauthorized access");
-    }
 
     const { text } = req.body;
 
@@ -180,7 +170,8 @@ export const addNotice = asyncHandler(async (req, res) => {
 
     await notice.save();
 
-    res.status(201).json(new ApiResponse(201, notice, "Notice added successfully!"));
+    res.status(201).json({notice});
+    // res.status(201).json(new ApiResponse(201, notice, "Notice added successfully!"));
 })
 
 //---------------------------------------=------=------=------=-----------------------------------------//

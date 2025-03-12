@@ -7,39 +7,43 @@ const Notices = () => {
   const [newNotice, setNewNotice] = useState({ title: "", content: "" });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/notices")
-      .then(res => setNotices(res.data))
-      .catch(err => console.error(err));
+    axios.get("/api/admin/notices")
+      .then(res => {
+        console.log("Fetched notices:", res.data); // Debugging
+        setNotices(Array.isArray(res.data) ? res.data : res.data.notices || []);
+      })
+      .catch(err => console.error("Error fetching notices:", err));
   }, []);
 
   const addNotice = () => {
-    axios.post("http://localhost:5000/api/notices", newNotice)
+    axios.post("/api/admin/notices", newNotice)
       .then(res => setNotices([...notices, res.data]))
-      .catch(err => console.error(err));
+      .catch(err => console.error("Error adding notice:", err));
   };
 
   return (
     <div>
       <Typography variant="h5">Manage Notices</Typography>
 
-      <TextField label="Title" fullWidth value={newNotice.title} 
-        onChange={e => setNewNotice({ ...newNotice, title: e.target.value })} />
-      <TextField label="Content" fullWidth multiline rows={3} value={newNotice.content} 
-        onChange={e => setNewNotice({ ...newNotice, content: e.target.value })} />
+      <TextField label="Title" fullWidth value={newNotice.text} 
+        onChange={e => setNewNotice({ ...newNotice, text: e.target.value })} />
       <Button variant="contained" sx={{ mt: 2 }} onClick={addNotice}>Add Notice</Button>
 
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {notices.map((notice) => (
-          <Grid item xs={12} key={notice._id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{notice.title}</Typography>
-                <Typography>{notice.content}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {notices.length === 0 ? (
+        <Typography sx={{ mt: 2, color: "gray" }}>No notices available.</Typography>
+      ) : (
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          {notices.map((notice) => (
+            <Grid item xs={12} key={notice._id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{notice.text}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </div>
   );
 };

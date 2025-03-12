@@ -5,9 +5,12 @@ export default function Notice() {
   const [notices, setNotices] = useState([]);
 
   useEffect(() => {
-    fetch("/api/admin/notices") // Update API route if necessary
+    fetch("/api/admin/notices")
       .then((res) => res.json())
-      .then((data) => setNotices(data))
+      .then((data) => {
+        console.log("Fetched data:", data); // Debugging
+        setNotices(Array.isArray(data) ? data : data.notices || []);
+      })
       .catch((err) => console.error("Error fetching notices:", err));
   }, []);
 
@@ -31,18 +34,20 @@ export default function Notice() {
           visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
         }}
       >
-        {notices.map((notice, index) => (
-          <motion.div
-            key={index}
-            className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm"
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-            transition={{ duration: 0.5 }}
-          >
-            <h3 className="text-lg font-semibold text-gray-900">{notice.title}</h3>
-            <p className="text-gray-600 text-sm mt-1">{notice.description}</p>
-            <p className="text-gray-500 text-xs mt-2">{new Date(notice.date).toLocaleDateString()}</p>
-          </motion.div>
-        ))}
+        {notices.length > 0 ? (
+          notices.map((notice, index) => (
+            <motion.div
+              key={index}
+              className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm"
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.5 }}
+            >
+              <h3 className="text-lg font-semibold text-gray-900">{notice.text}</h3>
+            </motion.div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500">No notices available.</p>
+        )}
       </motion.div>
     </div>
   );
