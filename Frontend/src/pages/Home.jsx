@@ -4,11 +4,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "swiper/css";
 import "swiper/css/pagination";
-import {BrandSlider} from "../Components/index";
-import {ImageCarousel} from "../Components/index";
-import {ImageGallery} from "../Components/index";
+import {BrandSlider,ImageGallery,ImageCarousel,Notice,Announce} from "../Components/index";
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaTwitter, FaGithub } from "react-icons/fa";
+
 function Home() {
 useEffect(() => {
 AOS.init({ duration: 1000 });
@@ -168,6 +167,24 @@ if (progress
       Your browser does not support the video tag.
     </motion.video>
   </motion.div>
+  <div className="p-6 sm:p-12">
+      <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10">
+        📢 <span className="text-blue-600">Notices & Announcements</span>
+      </h1>
+
+      {/* Flexbox Layout for Side-by-Side Display */}
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Left: Notices Section */}
+        <div className="w-full md:w-1/2">
+          <Notice />
+        </div>
+
+        {/* Right: Announcements Section */}
+        <div className="w-full md:w-1/2">
+          <Announce />
+        </div>
+      </div>
+    </div>
 
   <BrandSlider />
 

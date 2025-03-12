@@ -4,8 +4,7 @@ import { ApiResponse } from '../utils/Apiresponse.js';
 import { uploadOnCloudinary } from "../utils/cloudniary.js";
 import Image from '../models/image.models.js';
 import Alumni from '../models/alumni.models.js';
-import Announcement from '../models/announcement.models.js';
-import Notice from '../models/notice.models.js';
+import { v2 as cloudinary } from "cloudinary"
 
 //recruitors,studGallery&homepgEvent
 export const handleImage = asyncHandler(async (req, res) => {
@@ -66,7 +65,6 @@ export const getImages = asyncHandler(async (req, res) => {
 //Alumni Corner
 export const createAlumni = asyncHandler(async (req, res) => {
     const { name, jobTitle, linkedIn, github } = req.body;
-    console.log(req.file);
 
     const photoLocalPath = req.file.path;
     if (!photoLocalPath) {
@@ -95,17 +93,26 @@ export const createAlumni = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(201, newAlumni, "Successfully Added new Alumni"))
 })
+
 export const deleteAlumni = asyncHandler(async (req, res) => {
     //NOTE FOR frontend guy: Plz provide userId in params of the user to be deleted
-    const { id } = req.params;
-    if (!id) {
+    const alumniId = req.params.id;
+    if (!alumniId) {
         throw new ApiError(400, "Alumni _id not provided")
     }
 
-    await Alumni.findByIdAndDelete(id);
+    //delete img on cloudinary
+    const alumni = await Alumni.findById(alumniId);
+
+    const url = alumni.photo;
+    const match = url.match(/\/upload\/(?:v\d+\/)?([^/.]+)(?:\.[a-zA-Z]+)?$/);
+    const publicId = match ? match[1] : null;
+    if (!publicId) {
+        console.log("Invalid Cloudinary URL:", url);
+    }
+    await cloudinary.uploader.destroy(publicId);
+
+    await Alumni.findByIdAndDelete(alumniId);
 
     return res.status(200).json(new ApiResponse(200, null, "Alumni deleted successfully"))
 })
-
-
-

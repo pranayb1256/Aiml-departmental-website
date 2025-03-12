@@ -11,6 +11,8 @@ import {Dialog,DialogContent,DialogTitle,DialogTrigger} from "../Components/ui/d
 import Announcements from "../Components/Dashboard/Announcements";
 import Notices from "../Components/Dashboard/Notices";
 import ClubEvents from "../Components/Dashboard/ClubEvents";
+import Notice from "../Components/Notice/Notice";
+import Announce from "../Components/Announce/Announce"
 export{ 
   Header, 
   Footer, 
@@ -26,5 +28,5 @@ export{
   buttonVariants,
   Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent,
   Dialog,DialogContent,DialogTitle,DialogTrigger,
-  Announcements, Notices, ClubEvents
+  Announcements, Notices, ClubEvents, Notice,Announce
 };

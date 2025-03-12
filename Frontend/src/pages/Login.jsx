@@ -18,14 +18,14 @@ const Auth = () => {
     fullname: "",
     email: "",
     password: "",
-    adminid: "",
+    adminId: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    if (!credentials.email || !credentials.password || !credentials.adminid || (isRegister && !credentials.fullname)) {
+    if (!credentials.email || !credentials.password || !credentials.adminId || (isRegister && !credentials.fullname)) {
       setError("Please fill in all fields.");
       return;
     }
@@ -94,7 +94,7 @@ const Auth = () => {
               fullWidth
               margin="normal"
               value={credentials.adminid}
-              onChange={(e) => setCredentials({ ...credentials, adminid: e.target.value })}
+              onChange={(e) => setCredentials({ ...credentials, adminId: e.target.value })}
             />
             {error && (
               <Typography color="error" textAlign="center" mt={1}>
@@ -106,7 +106,7 @@ const Auth = () => {
               fullWidth
               sx={{ mt: 2 }}
               type="submit"
-              disabled={loading || !credentials.email || !credentials.password || !credentials.adminid || (isRegister && !credentials.fullname)}
+              disabled={loading || !credentials.email || !credentials.password || !credentials.adminId || (isRegister && !credentials.fullname)}
             >
               {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : isRegister ? "Register" : "Login"}
             </Button>
@@ -118,7 +118,7 @@ const Auth = () => {
               onClick={() => {
                 setIsRegister(!isRegister);
                 setError(""); // Clear error when switching
-                setCredentials({ fullname: "", email: "", password: "", adminid: "" }); // Reset fields
+                setCredentials({ fullname: "", email: "", password: "", adminId: "" }); // Reset fields
               }}
             >
               {isRegister ? "Login" : "Register"}

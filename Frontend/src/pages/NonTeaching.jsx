@@ -52,7 +52,7 @@ export default function NonTeachingPage() {
         {facultyData.map((faculty, index) => (
           <motion.div
             key={index}
-            className="rounded-lg border border-gray-300 overflow-hidden bg-gray-100"
+            className="rounded-lg border border-gray-200 overflow-hidden bg-gray-100"
             variants={itemVariants}
           >
             {/* Profile Image & Name Section */}
