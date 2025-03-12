@@ -31,12 +31,12 @@ router.post("/login", checkSpecialId, loginAdmin);
 router.post("/logout", authenticateToken, logoutAdmin);
 
 // Announcements routes (recheck this funcs in admin store)
-router.get("/announcements", authenticateToken, getAllAnnouncements);
-router.post("/announcements", authenticateToken, addAnnouncement);
+router.get("/announcements", getAllAnnouncements);
+router.post("/announcements", addAnnouncement);
 
 // Notices routes
-router.get("/notices", authenticateToken, getAllNotices);
-router.post("/notices", authenticateToken, addNotice);
+router.get("/notices", getAllNotices);
+router.post("/notices", addNotice);
 
 //club events routes
 router.get("/getAllEvents", authenticateToken, getAllEvents);
