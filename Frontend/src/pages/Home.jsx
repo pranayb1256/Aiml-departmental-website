@@ -111,7 +111,7 @@ if (progress
       {/* Image */}
       <div className="relative group">
         <img 
-          src="/images/new.jpg" 
+          src="/dept_photo/new.jpg" 
           alt="AI & ML Department" 
           className="rounded-2xl shadow-xl w-full transform group-hover:scale-105 transition duration-500 ease-in-out"
           data-aos="fade-left"
