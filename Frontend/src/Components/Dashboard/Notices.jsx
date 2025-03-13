@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { TextField, Button, Card, CardContent, Typography, Grid } from "@mui/material";
+import { toast } from "react-hot-toast";
 
 const Notices = () => {
   const [notices, setNotices] = useState([]);
@@ -26,6 +27,7 @@ const Notices = () => {
     axios
       .post("/api/admin/notices", { text: newNotice.trim() })
       .then((res) => {
+        toast.success("Added new Notice successfully!");
         setNotices([res.data.notice, ...notices]); // Add new notice at the top
         setNewNotice(""); // Reset input field
       })

@@ -13,6 +13,7 @@ import Academics from './pages/Academics';
 import Placements from './pages/Placements';
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login';
+import { Toaster } from "react-hot-toast";
 
 const PrivateRoute = ({ element }) => {
   const token = localStorage.getItem("token");
@@ -40,5 +41,6 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <Toaster  />
   </React.StrictMode>
 );

@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Link,
 } from "@mui/material";
+import toast from "react-hot-toast";
 
 const Auth = () => {
   const [isRegister, setIsRegister] = useState(false);
@@ -40,6 +41,7 @@ const Auth = () => {
           setIsRegister(false); // Switch to login after successful registration
         } else {
           localStorage.setItem("token", res.data.token);
+          toast.success("Admin logged in successfully!")
           navigate("/dashboard");
         }
       } else {

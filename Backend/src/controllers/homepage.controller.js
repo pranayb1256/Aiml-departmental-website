@@ -52,7 +52,6 @@ export const handleImage = asyncHandler(async (req, res) => {
 export const getImages = asyncHandler(async (req, res) => {
     // Fetch all image documents from the database
     const images = await Image.find();
-    console.log(images)
 
     if (!images || images.length === 0) {
         throw new ApiError(400, "Imgs not found")

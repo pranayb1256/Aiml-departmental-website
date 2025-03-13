@@ -5,6 +5,7 @@ import Notices from "../Components/Dashboard/Notices";
 import ClubEvents from "../Components/Dashboard/ClubEvents";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      toast.success("Logged out successfullly!");
 
       await axios.post(
         "api/admin/logout", 
