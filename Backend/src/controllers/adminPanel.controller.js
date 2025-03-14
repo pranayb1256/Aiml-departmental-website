@@ -1,17 +1,10 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/Apiresponse.js"
 import { generateToken } from "../utils/tokens.js";
-import { uploadOnCloudinary } from "../utils/cloudniary.js"
 import Admin from "../models/admin.models.js"
 import Announcement from '../models/announcement.models.js'
 import Notice from '../models/notice.models.js'
-import Event from '../models/events.models.js'
-import Faculty from "../models/faculty.models.js";
-import { v2 as cloudinary } from "cloudinary"
-
 //admin personals
 export const registerAdmin = asyncHandler(async (req, res) => {
     try {

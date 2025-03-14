@@ -8,6 +8,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import facultyRoutes from "./routes/faculty.routes.js";
 import nonfacultyRoutes from "./routes/nonfaculty.routes.js";
 import eventRoutes from "./routes/event.routes.js";
+import memberRoutes from "./routes/member.routes.js";
 const app = express();
 
 //configs
@@ -36,6 +37,8 @@ app.use("/api/faculty", facultyRoutes);
 app.use("/api/nonfaculty",nonfacultyRoutes)
 //Events routes
 app.use("/api/events",eventRoutes)
+//member routes
+app.use("/api/member",memberRoutes)
 
 //connection 
 connectDB()

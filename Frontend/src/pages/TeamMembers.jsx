@@ -1,167 +1,88 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "../components/ui/card.jsx";
 import { FaLinkedin, FaInstagram, FaGithub } from "react-icons/fa";
 
-const members = [
-  {
-    category: "President",
-    members: [
-      {
-        name: "John Doe",
-        yearBranch: "TE - AIML",
-        position: "President",
-        photo: "../../public/Photos/Avatar11.jpg",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-    ],
-  },
-  {
-    category: "Vice President",
-    members: [
-      {
-        name: "Jane Smith",
-        yearBranch: "SE - AIML",
-        position: "Vice President",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Jane Smith",
-        yearBranch: "SE - AIML",
-        position: "Vice President",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-    ],
-  },
-  {
-    category: "Team Members",
-    members: [
-      {
-        name: "Alice Brown",
-        yearBranch: "TE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Alice Brown",
-        yearBranch: "TE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Alice Brown",
-        yearBranch: "TE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Alice Brown",
-        yearBranch: "TE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Alice Brown",
-        yearBranch: "TE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-      {
-        name: "Bob Green",
-        yearBranch: "BE - AIML",
-        position: "Member",
-        photo: "https://via.placeholder.com/150",
-        linkedin: "#",
-        instagram: "#",
-        github: "#",
-      },
-    ],
-  },
-];
-
-const waveVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: (i) => ({
-    opacity: 1,
-    x: 0,
-    transition: { delay: i * 0.2, type: "spring", stiffness: 50 },
-  }),
-};
-
 const ClubMemberPage = () => {
+  const [selectedClub, setSelectedClub] = useState("AIMSA");
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    fetchMembers(selectedClub);
+  }, [selectedClub]);
+
+  const fetchMembers = async (club) => {
+    try {
+      const res = await axios.get(`/api/member/${club}`);
+      setMembers(res.data.members);
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4 text-center">
-      <h1 className="text-4xl font-bold text-gray-800 mb-10">Club Members</h1>
-      {members.map((section, index) => (
-        <div key={index} className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-6">{section.category}</h2>
-          <div className="flex flex-wrap justify-center gap-8">
-            {section.members.map((member, i) => (
-              <motion.div
-                key={i}
-                custom={i}
-                initial="hidden"
-                animate="visible"
-                variants={waveVariants}
-                className="w-64"
-              >
-                <Card className="shadow-lg rounded-2xl bg-white overflow-hidden">
-                  <div className="flex justify-center mt-4">
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="w-32 h-32 object-cover rounded-full border-4 border-gray-300"
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-800">{member.name}</h3>
-                    <p className="text-sm text-gray-600">{member.yearBranch}</p>
-                    <p className="text-sm font-medium text-gray-700">{member.position}</p>
-                    <div className="flex justify-center mt-3 space-x-4 text-gray-600">
-                      <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                        <FaLinkedin className="text-xl hover:text-blue-600" />
-                      </a>
-                      <a href={member.instagram} target="_blank" rel="noopener noreferrer">
-                        <FaInstagram className="text-xl hover:text-pink-500" />
-                      </a>
-                      <a href={member.github} target="_blank" rel="noopener noreferrer">
-                        <FaGithub className="text-xl hover:text-gray-800" />
-                      </a>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div className="p-8 max-w-6xl mx-auto text-center">
+      <h1 className="text-4xl font-bold text-gray-900 mb-6">{selectedClub} Club Members</h1>
+
+      {/* Club Selection */}
+      <div className="flex justify-center gap-4 mb-8">
+        {["AIMSA", "CSI", "ISTCe"].map((club) => (
+          <motion.button
+            key={club}
+            whileHover={{ scale: 1.1 }}
+            className={`px-5 py-2 rounded-lg font-medium transition-all shadow-md ${
+              selectedClub === club
+                ? "bg-blue-600 text-white shadow-lg"
+                : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+            }`}
+            onClick={() => setSelectedClub(club)}
+          >
+            {club}
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Members Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {members.map((member) => (
+          <motion.div
+            key={member._id}
+            whileHover={{ scale: 1.03 }}
+            className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center transition-all hover:shadow-lg"
+          >
+            <img
+              src={member.photo}
+              alt={member.name}
+              className="w-24 h-24 rounded-full object-cover border-2 border-gray-300 shadow-sm"
+            />
+            <h3 className="text-lg font-semibold mt-3 text-gray-900">{member.name}</h3>
+            <p className="text-gray-600 text-sm">{member.position}</p>
+            <div className="flex gap-4 mt-3">
+              {member.linkedin && (
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                  <FaLinkedin className="text-blue-600 text-2xl hover:scale-110 transition" />
+                </a>
+              )}
+              {member.instagram && (
+                <a href={member.instagram} target="_blank" rel="noopener noreferrer">
+                  <FaInstagram className="text-pink-500 text-2xl hover:scale-110 transition" />
+                </a>
+              )}
+              {member.github && (
+                <a href={member.github} target="_blank" rel="noopener noreferrer">
+                  <FaGithub className="text-gray-800 text-2xl hover:scale-110 transition" />
+                </a>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {members.length === 0 && (
+        <p className="text-center text-gray-500 mt-6">No members found for this club.</p>
+      )}
     </div>
   );
 };
 
 export default ClubMemberPage;
-
-

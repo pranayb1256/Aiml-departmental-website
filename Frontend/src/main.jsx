@@ -13,6 +13,7 @@ import Academics from './pages/Academics';
 import Placements from './pages/Placements';
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login';
+import TeamMember from "./pages/TeamMembers";
 import { Toaster } from "react-hot-toast";
 
 const PrivateRoute = ({ element }) => {
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="/Event" element={<Event/>} /> 
       <Route path="/Academics" element={<Academics/>} /> 
       <Route path="/Placements" element={<Placements/>} /> 
+      <Route path="/Club" element={<TeamMember/>} /> 
       <Route path="login" element={<Login />} />
       <Route path="dashboard" element={<PrivateRoute element={<Dashboard />} />} />
       {/* <Route path="login" element={<Login />} /> */}

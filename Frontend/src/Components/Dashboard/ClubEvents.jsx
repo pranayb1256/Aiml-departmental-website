@@ -92,7 +92,7 @@ const ClubEvents = () => {
       toast.success("Event added successfully!");
       setNewEvent(initialEventState);
     } catch (err) {
-      toast.error("Failed to add event.");
+      toast.error("Failed to add event.",err);
     }
   };
 
@@ -102,7 +102,7 @@ const ClubEvents = () => {
       fetchEvents();
       toast.success("Event deleted successfully!");
     } catch (err) {
-      toast.error("Failed to delete event.");
+      toast.error("Failed to delete event.",err);
     }
   };
 

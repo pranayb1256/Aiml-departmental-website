@@ -3,9 +3,11 @@ import { Container, Tabs, Tab, Box, Typography, Button, CircularProgress } from 
 import Announcements from "../Components/Dashboard/Announcements";
 import Notices from "../Components/Dashboard/Notices";
 import ClubEvents from "../Components/Dashboard/ClubEvents";
+import Member from "../Components/Dashboard/Member"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -80,12 +82,15 @@ const AdminDashboard = () => {
         <Tab label="Announcements" />
         <Tab label="Notices" />
         <Tab label="Club Events" />
+        <Tab label="Member" />
+
       </Tabs>
 
       <Box sx={{ mt: 3, p: 2 }}>
         {tabIndex === 0 && <Announcements />}
         {tabIndex === 1 && <Notices />}
         {tabIndex === 2 && <ClubEvents />}
+        {tabIndex === 3 && <Member />}
       </Box>
     </Container>
   );
