@@ -1,5 +1,5 @@
 import express from "express";
-import NonFaculty from "../models/nonfaculty.models.js";
+import NonFaculty from "../models/nonfaculty.model.js";
 
 const router = express.Router();
 

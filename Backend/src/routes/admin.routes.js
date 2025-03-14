@@ -9,11 +9,6 @@ import {
     addAnnouncement,
     getAllNotices,
     addNotice,
-    //Events
-    getAllEvents,
-    createEvent,
-    updateEvent,
-    deleteEvent,
     deleteNotice,
     deleteAnnouncement,
     //faculty
@@ -42,11 +37,6 @@ router.get("/notices", getAllNotices);
 router.post("/notices", authenticateToken, addNotice);
 router.delete("/notices/:id", authenticateToken,deleteNotice)
 
-//club events routes
-router.get("/getAllEvents", getAllEvents);
-router.post("/createEvent", authenticateToken, upload.array('images', 4), createEvent);
-router.put("/updateEvent/:id", updateEvent); // not working
-router.delete("/deleteEvent/:id", deleteEvent);
 
 //faculty routes (on hold )
 // router.get("/getAllFaculty", authenticateToken, getAllFaculty);

@@ -1,7 +1,11 @@
-PORT = 8000
-MONGODB_URI = mongodb+srv://group:grouP123@cluster0.aozrc.mongodb.net/
+#CLOUDINARY_CLOUD_NAME=dzydycrjo
+#CLOUDINARY_API_KEY=217943167443461
+#CLOUDINARY_API_SECRET=cDfYyRa5TTckPI9OIMiLroPWNyA
+PORT=8001
+MONGODB_URI=mongodb+srv://group:7xzqlJfpVtaBR1LB@cluster0.aozrc.mongodb.net
 CORS_ORIGIN=*
-CLOUDINARY_CLOUD_NAME=dzydycrjo
-CLOUDINARY_API_KEY=217943167443461
-CLOUDINARY_API_SECRET=cDfYyRa5TTckPI9OIMiLroPWNyA
-JWT_SECERT=Pranay@2005
+#CORS_ORIGIN=http://localhost:5173/ use when rendering frontend from backend
+
+JWT_SECRET=Pranay@2005
+NODE_ENV=development
+ADMIN_SECRET_ID=ltceAIML69

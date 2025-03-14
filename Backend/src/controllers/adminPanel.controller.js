@@ -12,8 +12,6 @@ import Event from '../models/events.models.js'
 import Faculty from "../models/faculty.models.js";
 import { v2 as cloudinary } from "cloudinary"
 
-
-
 //admin personals
 export const registerAdmin = asyncHandler(async (req, res) => {
     try {
@@ -206,107 +204,6 @@ export const deleteNotice = asyncHandler(async (req, res) => {
 });
 
 //---------------------------------------=------=------=------=-----------------------------------------//
-
-//clubsevents 
-export const getAllEvents = asyncHandler(async (req, res) => {
-    const events = await Event.find().sort({ createdAt: -1 });
-
-    if (!events) {
-        throw new ApiError(400, "Zero events found | use add clubevents btn to add new events");
-    }
-
-    res.status(200).json({ events, message: "Fetched all clubs successfully!" });
-    // res.status(200).json(new ApiResponse(200, events, "Fetched all clubs successfully!"));
-})
-
-export const createEvent = asyncHandler(async (req, res) => {
-    const { clubName, date, venue, description, guestSpeaker } = req.body;
-    const imageFiles = req.files;
-
-    if (imageFiles.length === 0) throw new ApiError(400, "clubs Images is required")
-    if (
-        [clubName, date, venue, description, guestSpeaker].some(x => x.trim() === "")
-    ) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // Upload images to Cloudinary
-    const uploadedImages = await Promise.all(
-        imageFiles?.map(async (file) => {
-            const response = await uploadOnCloudinary(file.path);
-            return response.url;
-        })
-    );
-
-
-    // Create new club entry
-    const newEvent = new Event({
-        images: uploadedImages, // Store Cloudinary URLs
-        clubName,
-        date,
-        venue,
-        description,
-        guestSpeaker
-    });
-
-    await newEvent.save();
-
-    res.status(201).json({ newEvent, message: "New Club created successfully!" });
-    // res.status(201).json(new ApiResponse(200, newEvent, "New Club created successfully!"));
-})
-
-//update event not working
-export const updateEvent = asyncHandler(async (req, res) => {
-    //while updating clubs wont let admin to change club images
-    const { clubName, date, venue, description, guestSpeaker } = req.body;
-    const eventId = req.params.id;
-    console.log(req.body);
-
-
-    if (!eventId) throw new ApiError(404, "Event ID is required")
-
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-        return res.status(404).json({ message: 'Event not found' });
-    }
-
-    // Only update fields if provided (avoids overwriting with undefined)
-    event.clubName = clubName ?? event.clubName;
-    event.date = date ?? event.date;
-    event.venue = venue ?? event.venue;
-    event.description = description ?? event.description;
-    event.guestSpeaker = guestSpeaker ?? event.guestSpeaker;
-
-    const updatedEvent = await event.save();
-
-    res.status(200).json({ updatedEvent, message: "Updated club successfully!" });
-    // res.status(200).json(new ApiResponse(200, updatedEvent, "Updated club successfully"));
-})
-
-export const deleteEvent = asyncHandler(async (req, res) => {
-
-    const eventId = req.params.id; // passed in params from frontend
-
-    if (!eventId) throw new ApiError(404, "Event ID is required")
-    console.log(eventId)
-
-    let event = await Event.findById(eventId);
-    console.log(event)
-    // Delete images from Cloudinary
-    await Promise.all(
-        event.images.map(async (imageUrl) => {
-            const match = imageUrl.match(/\/upload\/(?:v\d+\/)?([^/.]+)(?:\.[a-zA-Z]+)?$/);
-            const publicId = match ? match[1] : null;
-            await cloudinary.uploader.destroy(publicId);
-        })
-    );
-    //delete club with given id
-    await Event.findByIdAndDelete(eventId);
-
-    res.status(200).json({ message: "Event deleted successfully!" });
-    // res.status(200).json(new ApiResponse(200, null, "event deleted successfully"));
-})
 
 //---------------------------------------=------=------=------=-----------------------------------------//
 

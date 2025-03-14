@@ -1,186 +1,199 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
-    TextField, Button, Card, CardContent, Typography, Grid, Box, Dialog, DialogActions,
-    DialogContent, DialogTitle, CircularProgress
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Box,
+  CircularProgress,
+  CardMedia,
+  IconButton,
+  Select, MenuItem, InputLabel, FormControl
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import toast from "react-hot-toast";
 
-const API_URL = "http://localhost:5000/api/events";
+const API_URL = "/api/events/";
+const clubOptions = ["AIMSA", "CSI", "ISTCE"];
+
+const initialEventState = {
+  clubName: "",
+  date: null,
+  venue: "",
+  description: "",
+  guestSpeaker: "",
+  imageFiles: [],
+};
 
 const ClubEvents = () => {
-    const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [newEvent, setNewEvent] = useState(initialEventState());
-    const [editEvent, setEditEvent] = useState(null);
-    const [openDialog, setOpenDialog] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newEvent, setNewEvent] = useState(initialEventState);
 
-    useEffect(() => {
-        fetchEvents();
-    }, []);
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-    function initialEventState() {
-        return { title: "", eventDate: "", description: "", guestSpeaker: "", venue: "", learnings: "", imageFile: null };
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(API_URL);
+      setEvents(res.data.events || []);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      toast.error("Failed to fetch events.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (date) => {
+    setNewEvent((prev) => ({ ...prev, date }));
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setNewEvent((prev) => ({ ...prev, imageFiles: files }));
+  };
+
+  const handleSubmit = async () => {
+    if (!newEvent.clubName || !newEvent.date || !newEvent.venue || !newEvent.description) {
+      toast.error("Please fill all required fields.");
+      return;
     }
 
-    const fetchEvents = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get(API_URL);
-            setEvents(res.data);
-        } catch (err) {
-            console.error("Error fetching events:", err);
-        }
-        setLoading(false);
-    };
+    const formData = new FormData();
+    Object.entries(newEvent).forEach(([key, value]) => {
+      if (key !== "imageFiles") {
+        formData.append(key, value);
+      }
+    });
+    newEvent.imageFiles.forEach((file) => {
+      formData.append("images", file);
+    });
 
-    const handleInputChange = (e) => {
-        setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
-    };
+    try {
+      await axios.post(API_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      fetchEvents();
+      toast.success("Event added successfully!");
+      setNewEvent(initialEventState);
+    } catch (err) {
+      toast.error("Failed to add event.");
+    }
+  };
 
-    const handleImageUpload = (e) => {
-        setNewEvent({ ...newEvent, imageFile: e.target.files[0] });
-    };
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      fetchEvents();
+      toast.success("Event deleted successfully!");
+    } catch (err) {
+      toast.error("Failed to delete event.");
+    }
+  };
 
-    const handleSubmit = async () => {
-        const formData = new FormData();
-        Object.entries(newEvent).forEach(([key, value]) => formData.append(key, value));
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box sx={{ maxWidth: "900px", margin: "auto", p: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Manage Club Events
+        </Typography>
 
-        try {
-            const res = await axios.post(API_URL, formData, { headers: { "Content-Type": "multipart/form-data" } });
-            setEvents([...events, res.data]);
-            setNewEvent(initialEventState()); // Reset form
-        } catch (err) {
-            console.error("Error adding event:", err);
-        } finally {
-            toast.success("Added new club event successfully!")
-        }
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${API_URL}/${id}`);
-            setEvents(events.filter(event => event._id !== id));
-        } catch (err) {
-            console.error("Error deleting event:", err);
-        }
-    };
-
-    const openEditDialog = (event) => {
-        setEditEvent(event);
-        setOpenDialog(true);
-    };
-
-    const handleEditChange = (e) => {
-        setEditEvent({ ...editEvent, [e.target.name]: e.target.value });
-    };
-
-    const handleUpdate = async () => {
-        try {
-            await axios.put(`${API_URL}/${editEvent._id}`, editEvent);
-            fetchEvents();
-            setOpenDialog(false);
-        } catch (err) {
-            console.error("Error updating event:", err);
-        }
-    };
-
-    return (
-        <Box sx={{ maxWidth: "800px", margin: "auto", p: 4 }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                Manage Club Events
-            </Typography>
-
-            {/* Add Event Form */}
-            <Grid container spacing={2}>
-                {["title", "eventDate", "venue", "description", "guestSpeaker", "learnings"].map((field, index) => (
-                    <Grid item xs={field === "description" ? 12 : 6} key={index}>
-                        <TextField
-                            label={field.replace(/([A-Z])/g, " $1").trim()}
-                            name={field}
-                            fullWidth
-                            type={field === "eventDate" ? "date" : "text"}
-                            value={newEvent[field]}
-                            onChange={handleInputChange}
-                            multiline={field === "description"}
-                            rows={field === "description" ? 3 : 1}
-                        />
-                    </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel>Club Name</InputLabel>
+              <Select name="clubName" value={newEvent.clubName} onChange={handleInputChange}>
+                {clubOptions.map((club) => (
+                  <MenuItem key={club} value={club}>
+                    {club}
+                  </MenuItem>
                 ))}
-                <Grid item xs={12}>
-                    <Button variant="contained" component="label" startIcon={<CloudUploadIcon />} fullWidth sx={{ backgroundColor: "#1976D2", color: "white" }}>
-                        Upload Image
-                        <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" fullWidth onClick={handleSubmit} sx={{ mt: 2 }}>
-                        Add Event
-                    </Button>
-                </Grid>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {["venue", "description", "guestSpeaker"].map((field) => (
+            <Grid item xs={12} key={field}>
+              <TextField
+                label={field.charAt(0).toUpperCase() + field.slice(1)}
+                name={field}
+                fullWidth
+                value={newEvent[field]}
+                onChange={handleInputChange}
+              />
             </Grid>
+          ))}
 
-            {/* Loading State */}
-            {loading && <CircularProgress sx={{ display: "block", mx: "auto", mt: 4 }} />}
+          <Grid item xs={12}>
+            <DatePicker
+              label="Event Date"
+              value={newEvent.date}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField fullWidth {...params} />}
+            />
+          </Grid>
 
-            {/* Display Events */}
-            <Grid container spacing={2} sx={{ mt: 4 }}>
-                {events.map((event) => (
-                    <Grid item xs={12} md={6} key={event._id}>
-                        <Card sx={{ boxShadow: 3 }}>
-                            <CardContent>
-                                <img src={event.images} alt={event.title} style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "8px" }} />
-                                <Typography variant="h6" sx={{ mt: 2 }}>{event.title}</Typography>
-                                <Typography sx={{ color: "gray" }}>{event.eventDate}</Typography>
-                                <Typography sx={{ mt: 1 }}>{event.description}</Typography>
-                                <Typography sx={{ fontWeight: "bold" }}>🎤 {event.guestSpeaker}</Typography>
-                                <Typography>📍 {event.venue}</Typography>
-                                <Typography>📚 {event.learnings}</Typography>
+          <Grid item xs={12}>
+            <Button variant="contained" component="label" startIcon={<CloudUploadIcon />}>
+              Upload Images
+              <input type="file" hidden accept="image/*" multiple onChange={handleImageUpload} />
+            </Button>
+          </Grid>
 
-                                {/* Edit & Delete Buttons */}
-                                <Button startIcon={<EditIcon />} color="primary" onClick={() => openEditDialog(event)} sx={{ mt: 2, mr: 1 }}>
-                                    Edit
-                                </Button>
-                                <Button startIcon={<DeleteIcon />} color="error" onClick={() => handleDelete(event._id)} sx={{ mt: 2 }}>
-                                    Delete
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={handleSubmit} fullWidth>
+              Add Event
+            </Button>
+          </Grid>
+        </Grid>
+
+        {loading && <CircularProgress sx={{ display: "block", margin: "20px auto" }} />}
+
+        <Grid container spacing={3} sx={{ mt: 4 }}>
+          {events.map((event) => (
+            <Grid item xs={12} sm={6} md={4} key={event._id}>
+              <Card sx={{ transition: "0.3s", "&:hover": { transform: "scale(1.03)" } }}>
+                {event.images?.length > 0 && (
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={event.images[0]}
+                    alt="Event Image"
+                    sx={{ objectFit: "cover", width: "100%", borderRadius: "8px" }}
+                  />
+                )}
+                <CardContent>
+                  <Typography variant="h6">{event.clubName}</Typography>
+                  <Typography>Date: {event.date || "N/A"}</Typography>
+                  <Typography>Venue: {event.venue}</Typography>
+                  <Typography>Description: {event.description}</Typography>
+                  <Typography>Guest Speaker: {event.guestSpeaker || "TBA"}</Typography>
+                  <IconButton onClick={() => handleDelete(event._id)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </CardContent>
+              </Card>
             </Grid>
-
-            {/* Edit Event Dialog */}
-            {editEvent && (
-                <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                    <DialogTitle>Edit Event</DialogTitle>
-                    <DialogContent>
-                        {["title", "eventDate", "venue", "description", "guestSpeaker", "learnings"].map((field, index) => (
-                            <TextField
-                                key={index}
-                                label={field.replace(/([A-Z])/g, " $1").trim()}
-                                name={field}
-                                fullWidth
-                                type={field === "eventDate" ? "date" : "text"}
-                                value={editEvent[field]}
-                                onChange={handleEditChange}
-                                multiline={field === "description"}
-                                rows={field === "description" ? 3 : 1}
-                                sx={{ mt: 2 }}
-                            />
-                        ))}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-                        <Button onClick={handleUpdate} color="primary">Update</Button>
-                    </DialogActions>
-                </Dialog>
-            )}
-        </Box>
-    );
+          ))}
+        </Grid>
+      </Box>
+    </LocalizationProvider>
+  )
 };
 
 export default ClubEvents;
