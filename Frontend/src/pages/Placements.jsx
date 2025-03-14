@@ -1,19 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "../Components/ui/card";
-import {
-  FaUniversity,
-  FaBriefcase,
-  FaChartLine,
-  FaUsers,
-  FaRobot,
-  FaMicrochip,
-  FaDatabase,
-  FaBrain,
-  FaNewspaper,
-  FaBuilding,
-  FaChalkboardTeacher,
-} from "react-icons/fa";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Card } from "../Components/ui/card";
+import { FaBrain } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const Placements = () => {
   const [placementStats, setPlacementStats] = useState({
@@ -21,30 +9,6 @@ const Placements = () => {
     highestPackage: "Loading...",
     averagePackage: "Loading...",
   });
-
-  const careerDetails = {
-    "AI Engineer": {
-      description:
-        "AI Engineers build and deploy artificial intelligence models, optimizing systems for automation and decision-making.",
-      additionalInfo:
-        "Key Skills: Python, Deep Learning, TensorFlow, PyTorch, AI Ethics.\nCareer Growth: Senior AI Engineer, AI Architect, AI Research Scientist.",
-      link: "https://ai.google/research/",
-    },
-    "Data Scientist": {
-      description:
-        "Data Scientists analyze data to extract meaningful insights, design machine learning models, and drive AI applications.",
-      additionalInfo:
-        "Key Skills: Python, R, Machine Learning, SQL, Big Data.\nCareer Growth: Senior Data Scientist, Data Science Manager, Chief Data Officer.",
-      link: "https://www.coursera.org/articles/how-to-become-a-data-scientist",
-    },
-    "ML Engineer": {
-      description:
-        "ML Engineers develop and optimize machine learning models for real-world applications and scalable AI solutions.",
-      additionalInfo:
-        "Key Skills: TensorFlow, PyTorch, Cloud Computing, Model Deployment.\nCareer Growth: Senior ML Engineer, ML Architect, AI Engineer.",
-      link: "https://towardsdatascience.com/how-to-become-an-ml-engineer",
-    },
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -70,25 +34,9 @@ const Placements = () => {
             AIML Department Placements & Careers
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl">
-            Empowering students with cutting-edge AI and ML career opportunities in top tech companies worldwide.
+            Empowering students with cutting-edge AI and ML career opportunities in top tech companies.
           </p>
         </motion.div>
-      </section>
-
-      <section className="grid md:grid-cols-2 gap-6 mb-12">
-        {Object.keys(careerDetails).map((career) => (
-          <motion.div key={career} className="relative" whileHover={{ scale: 1.05 }}>
-            <Card className="shadow-lg p-6 border-l-4 border-blue-500 cursor-pointer">
-              <CardContent className="flex items-center gap-4">
-                <FaMicrochip className="text-4xl text-blue-500" />
-                <div>
-                  <h2 className="text-xl font-semibold text-blue-900">{career}</h2>
-                  <p className="text-gray-600">Explore AI & ML career paths</p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
       </section>
 
       <section className="mb-12 text-center">
@@ -110,19 +58,69 @@ const Placements = () => {
       </section>
 
       <section className="mb-12 text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">Top Hiring Companies</h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">Mandatory Internship Policy</h2>
+        <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-6">
+          As per AICTE norms, every engineering student must complete internships during their 4-year course. Failure to do so may result in not receiving the degree certificate.
+        </p>
+        <a href="https://www.aicte-ndia.org/sites/default/files/Aicte%20Internship%20Policy-%2002.04.2019.pdf" target="_blank" className="text-blue-600 underline">
+          AICTE Internship Policy – 02.04.2019
+        </a>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">Training & Placement Committee</h2>
+        <div className="grid md:grid-cols-2 gap-6">
           <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <FaBuilding className="text-4xl text-gray-500 mb-2" />
-            <h3 className="text-xl font-semibold text-blue-900">Google</h3>
+            <h3 className="text-xl font-semibold text-blue-900">Dr. Prerana Shrivastava</h3>
+            <p className="text-gray-700">Training and Placement Officer</p>
+            <p className="text-gray-700">Mobile: 9820319770</p>
+            <p className="text-gray-700">Email: Ltcoe.tpo@gmail.com</p>
           </Card>
           <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <FaBuilding className="text-4xl text-gray-500 mb-2" />
-            <h3 className="text-xl font-semibold text-blue-900">Microsoft</h3>
+            <h3 className="text-xl font-semibold text-blue-900">Dr. Jayesh Dange</h3>
+            <p className="text-gray-700">Dean Training and Entrepreneurship Cell</p>
+            <p className="text-gray-700">Email: jayesh.dange111@gmail.com</p>
+          </Card>
+        </div>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">Training Activities</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
+            <h3 className="text-xl font-semibold text-blue-900">Technical Training</h3>
+            <p className="text-gray-700">Dr. Smita S. Ambarkar, Prof. Vrushali Bendre, Prof. Krishna Dwivedi, Prof. Ujjawala Tade</p>
+            <ul className="list-disc pl-5 text-gray-700">
+              <li>Technical Seminars / Webinars</li>
+              <li>Technical Workshops</li>
+              <li>Technical Trainings</li>
+            </ul>
           </Card>
           <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <FaBuilding className="text-4xl text-gray-500 mb-2" />
-            <h3 className="text-xl font-semibold text-blue-900">Amazon</h3>
+            <h3 className="text-xl font-semibold text-blue-900">Mock Tests</h3>
+            <p className="text-gray-700">Prof. Savitha Devaraj, Prof. Rakhi D. Akhare, Prof. Ujjawala Pandarkar, Prof. Devidas Chikhale</p>
+            <ul className="list-disc pl-5 text-gray-700">
+              <li>Mock Aptitude Tests</li>
+              <li>Mock Programming Tests</li>
+              <li>Mock Technical Tests</li>
+            </ul>
+          </Card>
+          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
+            <h3 className="text-xl font-semibold text-blue-900">Soft Skills & Interview Preparation</h3>
+            <p className="text-gray-700">Prof. Geetha G, Dr. Rashmi Rani</p>
+            <ul className="list-disc pl-5 text-gray-700">
+              <li>Soft Skills Training Workshops</li>
+              <li>Group Discussion Trainings</li>
+              <li>Personal Interview Trainings</li>
+            </ul>
+          </Card>
+          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
+            <h3 className="text-xl font-semibold text-blue-900">Career Guidance</h3>
+            <p className="text-gray-700">Prof. Rekha Sonavane, Prof. Swati Chaudhary, Prof. Sheshmal S. Shingne</p>
+            <ul className="list-disc pl-5 text-gray-700">
+              <li>Career Guidance Seminars / Webinars</li>
+              <li>GATE / MBA / MS / GRE / IELTS / Competitive Exams Preparation</li>
+            </ul>
           </Card>
         </div>
       </section>

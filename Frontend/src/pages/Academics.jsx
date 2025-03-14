@@ -2,62 +2,71 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionItem } from "../Components/ui/accordion";
 import { Button } from "../Components/index";
 import { useState } from "react";
-import { FaTrophy, FaBook, FaChalkboardTeacher, FaDownload, FaUserGraduate, FaLaptopCode, FaCalendarAlt } from "react-icons/fa";
+import { FaTrophy, FaBook, FaChalkboardTeacher, FaDownload, FaUserGraduate, FaLaptopCode, FaCalendarAlt, FaAward, FaBriefcase, FaClipboardList } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const toppers = {
-  FE: [
-    { name: "Alice Johnson", image: "/images/alice.jpg", percentage: "92%" },
-    { name: "Bob Smith", image: "/images/bob.jpg", percentage: "91%" },
+const data = {
+  toppers: {
+    FE: [{ name: "Alice Johnson", image: "/images/alice.jpg", percentage: "92%" }],
+    SE: [{ name: "Charlie Brown", image: "/images/charlie.jpg", percentage: "93%" }],
+    TE: [{ name: "Eva Green", image: "/images/eva.jpg", percentage: "95%" }],
+    BE: [{ name: "Grace Hall", image: "/images/grace.jpg", percentage: "96%" }],
+  },
+  syllabus: {
+    FE: "/syllabus/fe.pdf",
+    SE: "/syllabus/se.pdf",
+    TE: "/syllabus/te.pdf",
+    BE: "/syllabus/be.pdf",
+  },
+  subjects: {
+    FE: ["Mathematics-I", "Physics", "Programming Fundamentals"],
+    SE: ["Data Structures", "Computer Networks"],
+    TE: ["Machine Learning", "Cloud Computing"],
+    BE: ["Deep Learning", "Cyber Security"],
+  },
+  faculty: [
+    { name: "Dr. John Doe", designation: "Professor & HOD", specialization: "Artificial Intelligence" },
+    { name: "Ms. Jane Smith", designation: "Assistant Professor", specialization: "Machine Learning" },
   ],
-  SE: [
-    { name: "Charlie Brown", image: "/images/charlie.jpg", percentage: "93%" },
-    { name: "David Lee", image: "/images/david.jpg", percentage: "90%" },
+  exams: [
+    { subject: "Machine Learning", date: "April 20, 2025", time: "10:00 AM" },
+    { subject: "Cyber Security", date: "April 25, 2025", time: "2:00 PM" },
   ],
-  TE: [
-    { name: "Eva Green", image: "/images/eva.jpg", percentage: "95%" },
-    { name: "Frank White", image: "/images/frank.jpg", percentage: "94%" },
+  achievements: [
+    { name: "Alice Johnson", award: "Winner - AI Hackathon 2024", image: "/images/alice.jpg" },
   ],
-  BE: [
-    { name: "Grace Hall", image: "/images/grace.jpg", percentage: "96%" },
-    { name: "Henry Ford", image: "/images/henry.jpg", percentage: "95%" },
+  resources: [
+    { title: "Data Structures Notes", link: "/notes/dsa.pdf" },
+    { title: "ML Question Paper", link: "/papers/ml.pdf" },
+  ],
+  testimonials: [
+    { name: "John Doe", batch: "2023", review: "Great faculty and learning environment!" },
+  ],
+  placements: [
+    { company: "Google", role: "Software Engineer", student: "Alice Johnson", batch: "2024" },
+  ],
+  faqs: [
+    { question: "How to apply for an internship?", answer: "Contact faculty coordinators." },
+  ],
+  projects: [
+    { title: "AI Chatbot", desc: "Mental health chatbot", github: "https://github.com/user/chatbot" },
   ],
 };
 
-const syllabus = {
-  FE: "https://muquestionpapers.com/syllabus/fe",
-  SE: "https://muquestionpapers.com/syllabus/se",
-  TE: "https://muquestionpapers.com/syllabus/te",
-  BE: "https://muquestionpapers.com/syllabus/be",
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
 };
-
-const subjects = {
-  FE: ["Mathematics-I", "Physics", "Programming Fundamentals", "Engineering Mechanics"],
-  SE: ["Data Structures", "Computer Networks", "Object-Oriented Programming", "Database Systems"],
-  TE: ["Machine Learning", "Cloud Computing", "Operating Systems", "Software Engineering"],
-  BE: ["Deep Learning", "Blockchain Technology", "Cyber Security", "AI Ethics"],
-};
-
-const faculty = [
-  { name: "Dr. John Doe", designation: "Professor & HOD", specialization: "Artificial Intelligence" },
-  { name: "Ms. Jane Smith", designation: "Assistant Professor", specialization: "Machine Learning" },
-  { name: "Dr. Robert Brown", designation: "Associate Professor", specialization: "Cyber Security" },
-];
 
 const Academics = () => {
   const [selectedYear, setSelectedYear] = useState("FE");
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -70,77 +79,91 @@ const Academics = () => {
         Academics - <span className="text-blue-500">AIML</span>
       </motion.h1>
 
-      {/* Topper Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-          <FaTrophy className="text-yellow-500 mr-2" /> Toppers
-        </h2>
-        <div className="flex space-x-4 mb-4">
-          {Object.keys(toppers).map((year) => (
-            <Button
-              key={year}
-              className={`px-4 py-2 rounded ${selectedYear === year ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}
-              onClick={() => setSelectedYear(year)}
-            >
-              {year}
-            </Button>
+      {/* Year Selector */}
+      <div className="flex justify-center space-x-4 mb-8">
+        {Object.keys(data.toppers).map((year) => (
+          <Button
+            key={year}
+            className={`px-4 py-2 rounded ${selectedYear === year ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}`}
+            onClick={() => setSelectedYear(year)}
+          >
+            {year}
+          </Button>
+        ))}
+      </div>
+
+      {/* Toppers */}
+     {/* Toppers */}
+        <Section title="Toppers" icon={<FaTrophy className="text-yellow-500" />}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.toppers[selectedYear].map((topper, index) => (
+              <div key={index} className="text-center p-4 bg-white shadow-md rounded-lg">
+                <img src={topper.image} alt={topper.name} className="mx-auto w-32 h-32 rounded-full shadow-md" />
+                <h3 className="mt-2 text-lg font-semibold">{topper.name}</h3>
+                <p className="text-gray-600">{topper.percentage}</p>
+              </div>
+            ))}
+          </div>
+</Section>
+
+
+      {/* Exam Schedule */}
+      <Section title="Exam Schedule" icon={<FaCalendarAlt className="text-blue-500" />}>
+        <ul className="list-disc pl-6 text-gray-700">
+          {data.exams.map((exam, index) => (
+            <li key={index}>
+              <strong>{exam.subject}</strong> - {exam.date} ({exam.time})
+            </li>
           ))}
-        </div>
+        </ul>
+      </Section>
+
+      {/* Study Resources */}
+      <Section title="Study Resources" icon={<FaBook className="text-green-500" />}>
+        <ul className="list-disc pl-6 text-gray-700">
+          {data.resources.map((res, index) => (
+            <li key={index}>
+              <a href={res.link} className="text-blue-500 hover:underline" download>
+                {res.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      {/* Student Testimonials */}
+      <Section title="Student Testimonials" icon={<FaUserGraduate className="text-purple-500" />}>
         <Slider {...sliderSettings}>
-          {toppers[selectedYear].map((topper, index) => (
+          {data.testimonials.map((test, index) => (
             <div key={index} className="text-center">
-              <img src={topper.image} alt={topper.name} className="mx-auto w-40 h-40 rounded-full shadow-md" />
-              <h3 className="mt-2 text-lg font-semibold text-gray-800">{topper.name}</h3>
-              <p className="text-gray-600">{topper.percentage}</p>
+              <p className="italic text-gray-700">"{test.review}"</p>
+              <h3 className="mt-2 text-lg font-semibold">{test.name} - {test.batch}</h3>
             </div>
           ))}
         </Slider>
-      </div>
+      </Section>
 
-      {/* Subjects and Downloads */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-          <FaBook className="text-green-500 mr-2" /> Subjects & Downloads
-        </h2>
-        <ul className="list-disc pl-6 text-gray-700 mb-4">
-          {subjects[selectedYear].map((subject, index) => (
-            <li key={index}>{subject}</li>
-          ))}
-        </ul>
-        <Button as="a" href={syllabus[selectedYear]} target="_blank" rel="noopener noreferrer" className="bg-blue-500 text-white px-4 py-2 rounded flex items-center">
-          <FaDownload className="mr-2" /> Download Syllabus PDF
-        </Button>
-      </div>
-
-      {/* Faculty Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-          <FaChalkboardTeacher className="text-red-500 mr-2" /> Faculty
-        </h2>
+      {/* Research & Projects */}
+      <Section title="Research & Projects" icon={<FaLaptopCode className="text-orange-500" />}>
         <ul className="list-disc pl-6 text-gray-700">
-          {faculty.map((member, index) => (
-            <li key={index}>{member.name} - {member.designation} ({member.specialization})</li>
+          {data.projects.map((proj, index) => (
+            <li key={index}>
+              <strong>{proj.title}</strong> - {proj.desc} (<a href={proj.github} className="text-blue-500 hover:underline">GitHub</a>)
+            </li>
           ))}
         </ul>
-      </div>
-
-      {/* Student Activities */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-          <FaUserGraduate className="text-purple-500 mr-2" /> Student Activities & Research
-        </h2>
-        <p>Our department encourages student participation in AI projects, hackathons, and research conferences.</p>
-      </div>
-
-      {/* Events */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-          <FaCalendarAlt className="text-orange-500 mr-2" /> Upcoming Events
-        </h2>
-        <p>Stay updated with departmental seminars, workshops, and guest lectures.</p>
-      </div>
+      </Section>
     </div>
   );
 };
+
+const Section = ({ title, icon, children }) => (
+  <div className="mb-8">
+    <h2 className="text-2xl font-semibold flex items-center text-gray-700 mb-4">
+      {icon} <span className="ml-2">{title}</span>
+    </h2>
+    {children}
+  </div>
+);
 
 export default Academics;

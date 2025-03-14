@@ -79,23 +79,61 @@ const progress = Math.min((timestamp - startTimestamp) / duration, 1);
 element.textContent = Math.floor(progress * (end - start) + start);
 if (progress
 < 1) { window.requestAnimationFrame(step); } }; window.requestAnimationFrame(step); } const ref=useRef(null); const isInView=useInView(ref, { amount: 0.5, once: false }); return ( <div className="bg-white font-sans text-black">
-  <div className="relative bg-white text-black py-24 px-6 text-center overflow-hidden">
-    <motion.div className="max-w-4xl mx-auto" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }}>
-      <motion.h1 className="text-5xl font-extrabold leading-tight tracking-wide" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}>
-        Welcome to the <span className="text-blue-500">AI & ML Department</span>
-      </motion.h1>
-      <motion.p className="mt-4 text-lg text-gray-600" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}>
-        Pioneering education and research in Artificial Intelligence and Machine Learning at Lokmanya Tilak College of Engineering.
-      </motion.p>
-    </motion.div>
-  </div>
-  <section id="about" className="py-20 bg-gray-50">
+    <div className="relative bg-white text-black py-28 px-6 text-center overflow-hidden">
+      {/* Background Glow Effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-700 opacity-10 blur-3xl"></div>
+      <motion.div
+        className="max-w-4xl mx-auto relative z-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        {/* Heading */}
+        <motion.h1
+          className="text-5xl md:text-7xl font-extrabold leading-tight tracking-wide"
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+        >
+          Welcome to the <span className="text-blue-600">AI & ML Department</span>
+        </motion.h1>
+
+        {/* Subtext */}
+        <motion.p
+          className="mt-6 text-lg md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+        >
+          Pioneering <strong>education</strong> and <strong>research</strong> in  
+          <span className="text-blue-600 font-semibold"> Artificial Intelligence </span>  
+          and  
+          <span className="text-blue-600 font-semibold"> Machine Learning </span>  
+             at Lokmanya Tilak College of Engineering.
+        </motion.p>
+      </motion.div>
+
+      {/* Floating Dots Decoration */}
+      <motion.div
+        className="absolute top-10 left-10 w-32 h-32 bg-blue-400 rounded-full opacity-20 blur-3xl"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1.2 }}
+        transition={{ duration: 2, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.div
+        className="absolute bottom-10 right-10 w-24 h-24 bg-indigo-400 rounded-full opacity-20 blur-3xl"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1.2 }}
+        transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+      />
+    </div>
+
+  <section id="about" className="py-20 bg-white">
   <div className="max-w-6xl mx-auto px-6">
     <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-12" data-aos="fade-up">
       About the Department
     </h2>
 
-    {/* Section 1: Introduction (Image Right, Text Left) */}
     <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
       {/* Text */}
       <div className="text-gray-700 text-lg space-y-6" data-aos="fade-right">
@@ -156,20 +194,15 @@ if (progress
   </div>
 </section>
 
-
-    {/* Section 1: Image Right, Text Left */}
-
-
-
   <motion.div ref={ref} className="bg-white flex justify-center px-4 py-4" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: isInView ? 1.1 : 0.8, opacity: isInView ? 1 : 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-    <motion.video autoPlay muted loop className="rounded-lg shadow-lg w-3/4" initial={{ scale: 0.9 }} animate={{ scale: isInView ? 1 : 0.9 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+      <motion.video autoPlay muted loop className="rounded-lg shadow-lg w-3/4" initial={{ scale: 0.9 }} animate={{ scale: isInView ? 1 : 0.9 }} transition={{ duration: 0.6, ease: "easeOut" }}>
       <source src="/videos/intro.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </motion.video>
   </motion.div>
   <div className="p-6 sm:p-12">
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10">
-        📢 <span className="text-blue-600">Notices & Announcements</span>
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        Notices & <span className="text-blue-500">Announcements</span>
       </h1>
 
       {/* Flexbox Layout for Side-by-Side Display */}

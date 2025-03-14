@@ -22,25 +22,26 @@ const ClubMemberPage = () => {
 
   return (
     <div className="p-8 max-w-6xl mx-auto text-center">
-      <h1 className="text-4xl font-bold text-gray-900 mb-6">{selectedClub} Club Members</h1>
+      <h1 className="text-4xl font-bold text-gray-900 mb-6">{selectedClub} <span className="text-blue-500">Club Members</span></h1>
 
       {/* Club Selection */}
-      <div className="flex justify-center gap-4 mb-8">
-        {["AIMSA", "CSI", "ISTCe"].map((club) => (
-          <motion.button
-            key={club}
-            whileHover={{ scale: 1.1 }}
-            className={`px-5 py-2 rounded-lg font-medium transition-all shadow-md ${
-              selectedClub === club
-                ? "bg-blue-600 text-white shadow-lg"
-                : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-            }`}
-            onClick={() => setSelectedClub(club)}
-          >
-            {club}
-          </motion.button>
-        ))}
-      </div>
+    <div className="flex justify-center gap-4 mb-8">
+  {["AIMSA", "CSI", "ISTCE"].map((club) => (
+    <motion.button
+      key={club}
+      whileHover={{ scale: 1.1 }}
+      className={`px-5 py-2 rounded-lg font-medium transition-all shadow-md ${
+        selectedClub === club
+          ? "bg-blue-600 text-white shadow-lg"
+          : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+      }`}
+      onClick={() => setSelectedClub(club)}
+    >
+      <span>{club}</span>
+    </motion.button>
+  ))}
+</div>
+
 
       {/* Members Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

@@ -37,13 +37,17 @@ function Footer() {
       <div className="text-center md:text-left w-full md:w-1/3">
         <ul className="space-y-2">
           <li className="font-bold uppercase">Quick Links</li>
-          {["ABOUT", "ACHIEVEMENTS", "CLUB INFO", "NEWS", "FACULTY", "TNP", "ERP"].map((item, index) => (
+          <li>
+            <a href="/" className="hover:text-gray-400">HOME</a>
+          </li>
+          {["ABOUT","Club","Event","Academics","Placements",].map((item, index) => (
             <li key={index}>
-              <a href="#" className="hover:text-gray-400">{item}</a>
+              <a href={`/${item.toLowerCase().replace(/\s+/g, "-")}`} className="hover:text-blue-500">{item}</a>
             </li>
           ))}
         </ul>
       </div>
+
   
       {/* Right Section: Team, Map & Address */}
       <div className="w-full md:w-1/3 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
