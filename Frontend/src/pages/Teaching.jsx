@@ -1,5 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
+import { FaLinkedin, FaEnvelope } from "react-icons/fa";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -32,19 +33,21 @@ export default function TeachingPage() {
   }, []);
 
   return (
-    <div className="p-6 sm:p-12">
+    <div className="p-6 sm:p-12 max-w-7xl mx-auto">
+      {/* Page Header */}
       <motion.h1
-        className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10"
+        className="text-5xl font-extrabold text-center text-gray-900 mb-12"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        Meet Our <span className="text-blue-500">Teaching Staff</span>
+        Meet Our <span className="text-blue-600">Teaching Staff</span>
       </motion.h1>
 
+      {/* Faculty Grid */}
       <motion.div
         ref={sectionRef}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10"
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -52,38 +55,56 @@ export default function TeachingPage() {
         {facultyData.map((faculty, index) => (
           <motion.div
             key={index}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-transform duration-300"
+            whileHover={{ scale: 1.05 }}
+            className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center transition-all hover:shadow-2xl border border-gray-100 hover:border-blue-400 relative overflow-hidden"
             variants={itemVariants}
           >
-            <div className="flex flex-col items-center py-6 bg-gray-100">
+            {/* Faculty Image */}
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
               <img
                 src={faculty.photo || "/Photos/default-avatar.png"}
                 alt={faculty.fullName}
-                className="w-24 h-24 object-cover rounded-full border-4 border-gray-300"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <h2 className="mt-4 text-lg font-semibold text-gray-800">{faculty.name}</h2> 
             </div>
-            <div className="p-6 text-center space-y-2">
-              <p className="text-gray-600 text-sm">
-                <strong>Designation:</strong> {faculty.designation}
-              </p>
-              <p className="text-gray-600 text-sm">
-                <strong>Experience:</strong> {faculty.experience} years
-              </p>
-              <p className="text-gray-600 text-sm">
-                <strong>Qualification:</strong> {faculty.qualification}
-              </p>
+
+            {/* Faculty Details */}
+            <h3 className="text-xl font-semibold mt-4 text-gray-900">{faculty.name}</h3>
+            <p className="text-gray-500 text-sm">{faculty.designation}</p>
+            <p className="text-gray-400 text-sm mt-1">Experience: {faculty.experience} years</p>
+            <p className="text-gray-400 text-sm">Qualification: {faculty.qualification}</p>
+
+            {/* Social Links */}
+            <div className="flex gap-6 mt-4">
+              {faculty.linkedin && (
+                <a
+                  href={faculty.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 text-2xl hover:scale-110 transition"
+                >
+                  <FaLinkedin />
+                </a>
+              )}
+
+              {/* Email Icon */}
               <a
                 href={`mailto:${faculty.email}`}
-                className="inline-block mt-3 text-blue-500 hover:text-blue-600 text-sm font-medium"
+                className="text-gray-600 text-2xl hover:text-blue-600 hover:scale-110 transition"
+                title="Email"
               >
-                {faculty.email}
+                <FaEnvelope />
               </a>
             </div>
           </motion.div>
         ))}
       </motion.div>
+
+      {/* No Faculty Found */}
+      {facultyData.length === 0 && (
+        <p className="text-center text-gray-500 mt-10 text-lg">No faculty data available.</p>
+      )}
     </div>
   );
 }

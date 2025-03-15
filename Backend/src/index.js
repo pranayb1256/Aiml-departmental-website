@@ -9,6 +9,7 @@ import facultyRoutes from "./routes/faculty.routes.js";
 import nonfacultyRoutes from "./routes/nonfaculty.routes.js";
 import eventRoutes from "./routes/event.routes.js";
 import memberRoutes from "./routes/member.routes.js";
+import auditRoutes from "./routes/audit.routes.js";
 const app = express();
 
 //configs
@@ -39,7 +40,8 @@ app.use("/api/nonfaculty",nonfacultyRoutes)
 app.use("/api/events",eventRoutes)
 //member routes
 app.use("/api/member",memberRoutes)
-
+//audit routes
+app.use("/api/audit",auditRoutes)
 //connection 
 connectDB()
     .then(() => {

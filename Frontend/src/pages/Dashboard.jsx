@@ -6,17 +6,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// Lazy-loaded components (for better performance)
+// Lazy-loaded components (Performance Optimization)
 const Announcements = lazy(() => import("../Components/Dashboard/Announcements"));
 const Notices = lazy(() => import("../Components/Dashboard/Notices"));
 const ClubEvents = lazy(() => import("../Components/Dashboard/ClubEvents"));
 const Member = lazy(() => import("../Components/Dashboard/Member"));
-const Analytics = lazy(() => import("../Components/Dashboard/Analytics"));
 const AuditLogs = lazy(() => import("../Components/Dashboard/Audit"));
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const theme = useTheme(); // MUI theme hook
+  const theme = useTheme();
 
   // State Management
   const [tabIndex, setTabIndex] = useState(Number(localStorage.getItem("tabIndex")) || 0);
@@ -29,25 +28,10 @@ const AdminDashboard = () => {
     localStorage.setItem("tabIndex", tabIndex);
   }, [tabIndex]);
 
-  // Fetch admin role (RBAC)
+  // 🔹 Debugging: Check API Token in Console
   useEffect(() => {
-    const fetchAdminRole = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("No authentication token found.");
-
-        const { data } = await axios.get("/api/admin/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setRole(data.role); // Example: "admin" or "superadmin"
-      } catch (err) {
-        console.error("Error fetching role:", err);
-        toast.error(err.response?.data?.message || "Failed to fetch user role.");
-      }
-    };
-
-    fetchAdminRole();
+    const token = localStorage.getItem("token");
+    console.log("🔑 Auth Token:", token);
   }, []);
 
   // Logout Handler (Optimized with useCallback)
@@ -98,10 +82,10 @@ const AdminDashboard = () => {
 
       {/* Dashboard Description */}
       <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 3 }}>
-        Manage announcements, notices, club events, analytics, and audit logs.
+        Manage announcements, notices, club events, and audit logs.
       </Typography>
 
-      {/* Role-Based Tab Visibility */}
+      {/* Tabs Navigation */}
       <Tabs
         value={tabIndex}
         onChange={(e, newIndex) => setTabIndex(newIndex)}
@@ -112,19 +96,17 @@ const AdminDashboard = () => {
         <Tab label="Notices" />
         <Tab label="Club Events" />
         <Tab label="Member" />
-        <Tab label="Analytics" />
         <Tab label="Audit Logs" />
       </Tabs>
 
-      {/* Lazy Loading with Suspense */}
+      {/* Content Based on Tab Selection */}
       <Box sx={{ mt: 3, p: 2 }}>
         <Suspense fallback={<CircularProgress sx={{ display: "block", mx: "auto" }} />}>
           {tabIndex === 0 && <Announcements />}
           {tabIndex === 1 && <Notices />}
           {tabIndex === 2 && <ClubEvents />}
           {tabIndex === 3 && <Member />}
-          {tabIndex === 4 && <Analytics />}
-          {tabIndex === 5 && <AuditLogs />}
+          {tabIndex === 4 && <AuditLogs />}  {/* 🔥 Removed clubName prop, shows all clubs */}
         </Suspense>
       </Box>
     </Container>

@@ -15,6 +15,7 @@ const Event = () => {
   const [selectedClub, setSelectedClub] = useState("AIMSA");
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const fetchEvents = async () => {
     try {
@@ -32,7 +33,8 @@ const Event = () => {
   const filteredEvents = events.filter((event) => event.clubName === selectedClub);
 
   return (
-    <div className="p-10 bg-gray-100 min-h-screen">
+    <div className={`p-10 bg-gray-100 min-h-screen ${isDialogOpen ? "overflow-hidden" : ""}`}>
+      {/* Page Title */}
       <motion.h1 
         className="text-center text-5xl font-extrabold mb-10 text-gray-900 tracking-wide" 
         initial={{ opacity: 0, y: -20 }}
@@ -42,8 +44,9 @@ const Event = () => {
         Our <span className="text-blue-600">Events</span>
       </motion.h1>
 
+      {/* Club Filter Buttons */}
       <motion.div 
-        className="flex justify-center text-gray-100 gap-6 mb-10"
+        className={`flex justify-center text-gray-100 gap-6 mb-10 transition-opacity duration-300 ${isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -60,8 +63,9 @@ const Event = () => {
         ))}
       </motion.div>
 
+      {/* Event Cards Grid */}
       <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 transition-opacity duration-300 ${isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
@@ -70,7 +74,10 @@ const Event = () => {
           <motion.div key={event._id} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
             <Card 
               className="p-6 cursor-pointer shadow-lg bg-white rounded-2xl transform transition hover:shadow-xl"
-              onClick={() => setSelectedEvent(event)}
+              onClick={() => {
+                setSelectedEvent(event);
+                setIsDialogOpen(true);
+              }}
             >
               <CardContent className="p-0">
                 <Swiper
@@ -86,10 +93,10 @@ const Event = () => {
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                <div className="p-5 text-center">
+                <div className="p-5 text-center space-y-2">
                   <h3 className="text-2xl font-semibold text-gray-900">{event.clubName}</h3>
-                  <p className="text-sm text-gray-500">{event.date} | {event.venue}</p>
-                  <p className="mt-3 text-gray-700">{event.description}</p>
+                  <p className="text-gray-500 text-sm">{event.date} | {event.venue}</p>
+                  <p className="text-gray-700 text-sm line-clamp-3">{event.description}</p>
                 </div>
               </CardContent>
             </Card>
@@ -97,13 +104,15 @@ const Event = () => {
         ))}
       </motion.div>
 
+      {/* Event Dialog (Modal) */}
       {selectedEvent && (
-        <Dialog open={true} onOpenChange={() => setSelectedEvent(null)}>
-          <DialogContent className="max-w-3xl p-8 bg-white rounded-xl shadow-xl">
+        <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
+          <DialogContent className="max-w-4xl p-8 bg-white rounded-xl shadow-xl transform scale-95 transition-all duration-300">
             <DialogTitle className="text-3xl font-bold text-center mb-5 text-gray-900">
               {selectedEvent.clubName}
             </DialogTitle>
 
+            {/* Swiper for Event Images */}
             <Swiper
               effect="coverflow"
               grabCursor={true}
@@ -122,7 +131,7 @@ const Event = () => {
               navigation
               pagination={{ clickable: true }}
               modules={[EffectCoverflow, Autoplay, Navigation, Pagination]}
-              className="w-full h-72 rounded-lg shadow-lg mb-6"
+              className="w-full h-80 rounded-lg shadow-lg mb-6"
             >
               {selectedEvent.images.map((src, index) => (
                 <SwiperSlide key={index} className="h-full">
@@ -133,16 +142,17 @@ const Event = () => {
               ))}
             </Swiper>
 
-            <div className="text-left space-y-3">
+            {/* Event Details */}
+            <div className="text-left space-y-4">
               <p className="text-lg font-medium"><strong className="text-blue-600">Date:</strong> {selectedEvent.date}</p>
               <p className="text-lg font-medium"><strong className="text-blue-600">Venue:</strong> {selectedEvent.venue}</p>
-              <p className="text-lg font-medium"><strong className="text-blue-600">description:</strong> {selectedEvent.description}</p>
-              <p className="text-lg font-medium"><strong className="text-blue-600">guestSpeaker:</strong> {selectedEvent.guestSpeaker}</p>
+              <p className="text-lg font-medium"><strong className="text-blue-600">Guest Speaker:</strong> {selectedEvent.guestSpeaker}</p>
               <p className="mt-4 text-gray-700 text-lg leading-relaxed">{selectedEvent.description}</p>
             </div>
 
+            {/* Close Button */}
             <Button 
-              onClick={() => setSelectedEvent(null)} 
+              onClick={() => setIsDialogOpen(false)} 
               className="mt-6 w-full bg-gray-700 text-white py-3 rounded-lg hover:bg-red-600 transition"
             >
               Close

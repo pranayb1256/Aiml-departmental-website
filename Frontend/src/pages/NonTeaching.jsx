@@ -32,19 +32,21 @@ export default function NonTeachingPage() {
   }, []);
 
   return (
-    <div className="p-6 sm:p-12">
+    <div className="p-6 sm:p-12 max-w-7xl mx-auto">
+      {/* Page Header */}
       <motion.h1
-        className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10"
+        className="text-5xl font-extrabold text-center text-gray-900 mb-12"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        Meet Our <span className="text-blue-500">Non-Teaching Staff</span>
+        Meet Our <span className="text-blue-600">Non-Teaching Staff</span>
       </motion.h1>
 
+      {/* Staff Grid */}
       <motion.div
         ref={sectionRef}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10"
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -52,32 +54,35 @@ export default function NonTeachingPage() {
         {facultyData.map((faculty, index) => (
           <motion.div
             key={index}
-            className="rounded-lg border border-gray-200 overflow-hidden bg-gray-100"
+            className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all hover:shadow-2xl border border-gray-200 hover:border-blue-400 relative overflow-hidden"
             variants={itemVariants}
           >
-            {/* Profile Image & Name Section */}
-            <div className="flex flex-col items-center py-6 bg-gray-200">
+            {/* Staff Image */}
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 shadow-md">
               <img
-                src={faculty.profileImage || "/Photos/default-avatar.png"}
+                src={faculty.photo || "/Photos/default-avatar.png"}
                 alt={faculty.fullname}
-                className="w-24 h-24 object-cover rounded-full border border-gray-400"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <h2 className="mt-4 text-lg font-semibold text-gray-800">{faculty.fullname}</h2>
             </div>
 
-            {/* Designation & Qualification Section (White Background) */}
-            <div className="p-6 text-center space-y-2 bg-white">
-              <p className="text-gray-700 text-sm">
-                <strong>Designation:</strong> {faculty.designation}
-              </p>
-              <p className="text-gray-700 text-sm">
-                <strong>Qualification:</strong> {faculty.qualification}
-              </p>
-            </div>
+            {/* Staff Details */}
+            <h3 className="text-xl font-semibold mt-4 text-gray-900">{faculty.fullname}</h3>
+            <p className="text-gray-500 text-sm">{faculty.designation}</p>
+            <p className="text-gray-400 text-sm mt-1">Experience: {faculty.experience} years</p>
+            <p className="text-gray-400 text-sm">Qualification: {faculty.qualification}</p>
           </motion.div>
         ))}
+
+
+        
       </motion.div>
+
+      {/* No Staff Found */}
+      {facultyData.length === 0 && (
+        <p className="text-center text-gray-500 mt-10 text-lg">No non-teaching staff data available.</p>
+      )}
     </div>
   );
 }

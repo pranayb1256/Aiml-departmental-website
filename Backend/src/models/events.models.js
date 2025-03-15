@@ -7,9 +7,11 @@ const eventsSchema = new Schema({
     clubName: {
         type: String,
         trim: true,
+        require: true,
     },
-    date: {
-        type: String,
+    dateTime: {
+        type: Date, 
+        require: true 
     },
     venue: {
         type: String,
