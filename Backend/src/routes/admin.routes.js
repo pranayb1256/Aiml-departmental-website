@@ -17,6 +17,11 @@ import {
     // updateFaculty,
     // deleteFaculty,
 } from "../controllers/adminPanel.controller.js";
+import { getAnalytics } from "../controllers/analytics.controller.js";
+import { getAuditLogs } from "../controllers/auditlog.controller.js";
+// import {logAdminAction} from "../middleware/login.middleware.js";
+// import authMiddleware from "../middlewares/authMiddleware.js"; 
+
 import { upload } from "../middleware/multer.middleware.js";
 
 
@@ -43,6 +48,10 @@ router.delete("/notices/:id", authenticateToken,deleteNotice)
 // router.post("/createFaculty", authenticateToken, upload.single("facultyPhoto"), createFaculty);
 // router.put("/updateFaculty/:id", authenticateToken, updateFaculty);
 // router.delete("/deleteFaculty/:id", authenticateToken, deleteFaculty);
+//analytics and audit routes 
+router.get("/analytics", authenticateToken, getAnalytics);
 
+// Get audit logs (Superadmin only)
+router.get("/audit-logs", authenticateToken, getAuditLogs);
 
 export default router;
