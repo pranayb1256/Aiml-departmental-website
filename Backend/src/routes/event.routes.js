@@ -6,8 +6,8 @@ import { upload } from "../middleware/multer.middleware.js";
 const router = express.Router();
 
 router.get("/", getAllEvents);
-router.post("/", authenticateToken, upload.array("images", 5), createEvent);
-router.put("/:id", authenticateToken, upload.array("images", 5), updateEvent);
-router.delete("/:id", authenticateToken, deleteEvent);
+router.post("/",authenticateToken,upload.array("images", 5), createEvent);
+router.put("/:id",authenticateToken,upload.array("images", 5), updateEvent);
+router.delete("/:id",authenticateToken,deleteEvent);
 
 export default router;

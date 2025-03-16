@@ -12,7 +12,7 @@ export const authenticateToken = async (req, res, next) => {
 
         if (!admin) throw new ApiError(400, "User not found or invalid token")
         req.admin = admin;
-
+    
         next();
     } catch (err) {
         console.log("Error in auth middleware | Invalid token | ERROR: ", err);

@@ -22,18 +22,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [role, setRole] = useState(null);
-
-  // Save selected tab index in localStorage
-  useEffect(() => {
-    localStorage.setItem("tabIndex", tabIndex);
-  }, [tabIndex]);
-
-  // 🔹 Debugging: Check API Token in Console
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("🔑 Auth Token:", token);
-  }, []);
-
+  
+  
   // Logout Handler (Optimized with useCallback)
   const handleLogout = useCallback(async () => {
     setLoading(true);

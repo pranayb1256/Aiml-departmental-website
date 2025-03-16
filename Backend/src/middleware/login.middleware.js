@@ -1,4 +1,4 @@
-import AdminAction from "../models/AdminAction.js";
+import AdminAction from "../models/admin.models";
 
 const logAdminAction = async (req, res, next) => {
   try {
