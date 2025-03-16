@@ -1,4 +1,4 @@
-import Member from "../models/members.model.js";
+import Member from "../models/members.models.js";
 
 // Get all members of a specific club
 export const getMembersByClub = async (req, res) => {

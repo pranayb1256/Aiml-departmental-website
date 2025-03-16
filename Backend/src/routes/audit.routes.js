@@ -1,5 +1,5 @@
 import express from "express";
-import AuditLog from "../models/audit.model.js";
+import AuditLog from "../models/audit.models.js";
 import Event from "../models/events.models.js";
 
 const router = express.Router();

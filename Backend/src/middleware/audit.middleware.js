@@ -1,5 +1,5 @@
 
-import AuditLog from "../models/audit.model.js";
+import AuditLog from "../models/audit.models.js";
 
 export const logAudit = async (adminEmail, action, eventId) => {
     try {

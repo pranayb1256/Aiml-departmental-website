@@ -1,10 +1,10 @@
-import AuditLog from "../models/audit.model.js";
+import AuditLog from "../models/audit.models.js";
 
 export const getAuditLogs = async (req, res) => {
   try {
     const logs = await AuditLog.find()
       .sort({ timestamp: -1 })
-      .limit(20)
+      .limit(25)
       .populate("eventId", "clubName");
 
     res.json(logs);

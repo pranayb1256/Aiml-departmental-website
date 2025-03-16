@@ -32,7 +32,7 @@ router.post("/register", checkSpecialId, registerAdmin);
 router.post("/login", checkSpecialId, loginAdmin);
 router.post("/logout", authenticateToken, logoutAdmin);
 
-// Announcements routes (recheck this funcs in admin store)
+// Announcements routes 
 router.get("/announcements", getAllAnnouncements);
 router.post("/announcements", authenticateToken, addAnnouncement);
 router.delete("/announcements/:id", authenticateToken,deleteAnnouncement)

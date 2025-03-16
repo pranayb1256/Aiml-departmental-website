@@ -11,6 +11,7 @@ import eventRoutes from "./routes/event.routes.js";
 import memberRoutes from "./routes/member.routes.js";
 import auditRoutes from "./routes/audit.routes.js";
 import aluminiRoutes from "./routes/alumini.routes.js";
+import academicsRoutes from "./routes/academics.routes.js"
 const app = express();
 
 //configs
@@ -30,21 +31,24 @@ app.use(cookieParser()); // middleware to parse cookies
 
 
 //hompage routes 
-app.use("/api/homepage",homepageRoutes);
+app.use("/api/homepage", homepageRoutes);
 //admin routes
-app.use("/api/admin",adminRoutes);
+app.use("/api/admin", adminRoutes);
 //Faculty route 
 app.use("/api/faculty", facultyRoutes);
 //NonFacultu routes
-app.use("/api/nonfaculty",nonfacultyRoutes)
+app.use("/api/nonfaculty", nonfacultyRoutes)
 //Events routes
-app.use("/api/events",eventRoutes)
+app.use("/api/events", eventRoutes)
 //member routes
-app.use("/api/member",memberRoutes)
+app.use("/api/member", memberRoutes)
 //audit routes
-app.use("/api/audit",auditRoutes)
+app.use("/api/audit", auditRoutes)
 //alumni routes
-app.use("/api/alumini",aluminiRoutes)
+app.use("/api/alumini", aluminiRoutes)
+//academics routes
+app.use("/api/academics", academicsRoutes)
+
 //connection 
 connectDB()
     .then(() => {
