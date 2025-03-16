@@ -14,6 +14,7 @@ import ClubEvents from "../Components/Dashboard/ClubEvents";
 import Notice from "../Components/Notice/Notice";
 import Announce from "../Components/Announce/Announce"
 import AlumniSection from "../Components/Alumini/Alumini";
+import TimetableManager from "../Components/Dashboard/Timetable";
 export{ 
   Header, 
   Footer, 
@@ -29,5 +30,5 @@ export{
   buttonVariants,
   Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent,
   Dialog,DialogContent,DialogTitle,DialogTrigger,
-  Announcements, Notices, ClubEvents, Notice,Announce,AlumniSection
+  Announcements, Notices, ClubEvents, Notice,Announce,AlumniSection,TimetableManager
 };

@@ -2,22 +2,25 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { FaLinkedin, FaInstagram, FaGithub } from "react-icons/fa";
-
+import { IoMdLink } from "react-icons/io";
 const clubDetails = {
   AIMSA: {
     name: "AI & Machine Learning Students' Association",
-    instagram: "https://instagram.com/aimsa_official",
-    banner: "/images/aimsa-banner.jpg",
+    instagram: "https://www.instagram.com/csiaiml.ltce/",
+    linktree:"https://linktr.ee/csiaimlltce",
+    banner: "/images/AIMSA.jpg",
   },
   CSI: {
     name: "Computer Society of India",
-    instagram: "https://instagram.com/csi_club",
-    banner: "/images/csi-banner.jpg",
+    instagram: "https://www.instagram.com/aimsa_ltce/",
+    linktree:"https://linktr.ee/csiaimlltce",
+    banner: "/images/CsI.jpg",
   },
-  ISTCE: {
+  ISTE: {
     name: "Institution of Smart Technology and Computing Engineers",
-    instagram: "https://instagram.com/istce_official",
-    banner: "/images/istce-banner.jpg",
+    instagram: "https://www.instagram.com/isteaiml.ltce/",
+    linktree:"https://linktr.ee/csiaimlltce",
+    banner: "/images/ISTE.jpg",
   },
 };
 
@@ -59,18 +62,18 @@ const ClubMemberPage = () => {
     "PUBLICITY & SPONSORSHIP",
     "CO - TECHNICAL SECRETARY",
     "PHOTOGRAPHY",
-    "TEAM MEMBERS"
+    "TEAM MEMBERS",
   ];
 
   const groupedMembers = members.reduce((acc, member) => {
-    const normalizedPosition = member.position.toLowerCase(); // Convert to lowercase
+    const normalizedPosition = member.position.toLowerCase();
     acc[normalizedPosition] = acc[normalizedPosition] || [];
     acc[normalizedPosition].push(member);
     return acc;
   }, {});
 
   const positionMapping = positionHierarchy.reduce((map, position) => {
-    map[position.toLowerCase()] = position; // Map lowercase to original format
+    map[position.toLowerCase()] = position;
     return map;
   }, {});
 
@@ -85,16 +88,30 @@ const ClubMemberPage = () => {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-lg">
-            <h1 className="text-4xl md:text-5xl font-extrabold">{clubDetails[selectedClub].name}</h1>
-            <a
-              href={clubDetails[selectedClub].instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-500 px-5 py-2 rounded-full text-lg font-semibold shadow-lg hover:scale-105 transition"
-            >
-              <FaInstagram className="text-2xl" />
-              Follow Us on Instagram
-            </a>
+            <h1 className="text-4xl md:text-5xl font-extrabold">
+              {clubDetails[selectedClub].name}
+            </h1>
+            <div className="flex justify-center items-center gap-4 mt-4">
+              {/* Instagram Icon */}
+              <a
+                href={clubDetails[selectedClub].instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-pink-500 hover:text-red-500 transition"
+              >
+                <FaInstagram className="text-3xl" />
+              </a>
+
+              {/* Linktree Icon */}
+              <a
+                href={clubDetails[selectedClub].linktree}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-500 hover:text-blue-500 transition"
+              >
+                <IoMdLink className="text-3xl" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -106,7 +123,9 @@ const ClubMemberPage = () => {
             key={club}
             whileHover={{ scale: 1.1 }}
             className={`px-6 py-3 rounded-lg font-semibold transition-all shadow-lg text-lg ${
-              selectedClub === club ? "bg-blue-600 text-white shadow-xl" : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+              selectedClub === club
+                ? "bg-blue-600 text-white shadow-xl"
+                : "bg-gray-100 text-gray-900 hover:bg-gray-200"
             }`}
             onClick={() => setSelectedClub(club)}
           >
@@ -119,7 +138,9 @@ const ClubMemberPage = () => {
       {loading ? (
         <p className="text-center text-gray-500 text-lg">Loading members...</p>
       ) : members.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10 text-lg">No members found for this club.</p>
+        <p className="text-center text-gray-500 mt-10 text-lg">
+          No members found for this club.
+        </p>
       ) : (
         <div className="space-y-14">
           {positionHierarchy.map((position) => {
@@ -145,21 +166,40 @@ const ClubMemberPage = () => {
                           />
                         </div>
                         <div className="mt-12 text-center">
-                          <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
-                          <p className="text-gray-600 text-sm">{member.position}</p>
+                          <h3 className="text-xl font-bold text-gray-900">
+                            {member.name}
+                          </h3>
+                          <p className="text-gray-600 text-sm">
+                            {member.position}
+                          </p>
                           <div className="flex gap-4 mt-4">
                             {member.linkedin && (
-                              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-2xl hover:scale-110 transition">
+                              <a
+                                href={member.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 text-2xl hover:scale-110 transition"
+                              >
                                 <FaLinkedin />
                               </a>
                             )}
                             {member.instagram && (
-                              <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="text-pink-500 text-2xl hover:scale-110 transition">
+                              <a
+                                href={member.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-pink-500 text-2xl hover:scale-110 transition"
+                              >
                                 <FaInstagram />
                               </a>
                             )}
                             {member.github && (
-                              <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-gray-900 text-2xl hover:scale-110 transition">
+                              <a
+                                href={member.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-900 text-2xl hover:scale-110 transition"
+                              >
                                 <FaGithub />
                               </a>
                             )}

@@ -12,7 +12,7 @@ const Notices = lazy(() => import("../Components/Dashboard/Notices"));
 const ClubEvents = lazy(() => import("../Components/Dashboard/ClubEvents"));
 const Member = lazy(() => import("../Components/Dashboard/Member"));
 const AuditLogs = lazy(() => import("../Components/Dashboard/Audit"));
-
+const TimetableManager = lazy(() => import("../Components/Dashboard/Timetable"));
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -87,6 +87,7 @@ const AdminDashboard = () => {
         <Tab label="Club Events" />
         <Tab label="Member" />
         <Tab label="Audit Logs" />
+        <Tab label="Timetable" />
       </Tabs>
 
       {/* Content Based on Tab Selection */}
@@ -96,7 +97,9 @@ const AdminDashboard = () => {
           {tabIndex === 1 && <Notices />}
           {tabIndex === 2 && <ClubEvents />}
           {tabIndex === 3 && <Member />}
-          {tabIndex === 4 && <AuditLogs />}  {/* 🔥 Removed clubName prop, shows all clubs */}
+          {tabIndex === 4 && <AuditLogs />}
+          {tabIndex === 5 && <TimetableManager />}
+
         </Suspense>
       </Box>
     </Container>

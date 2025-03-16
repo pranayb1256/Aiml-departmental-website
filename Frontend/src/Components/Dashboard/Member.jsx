@@ -75,7 +75,7 @@ const Member = () => {
         >
           <option value="AIMSA">AIMSA</option>
           <option value="CSI">CSI</option>
-          <option value="ISTCe">ISTCe</option>
+          <option value="ISTE">ISTE</option>
         </select>
       </div>
 

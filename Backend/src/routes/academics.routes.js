@@ -4,9 +4,9 @@ import { uploadTimetable, getTimetable, deleteTimetable, getAllTimetable } from 
 
 const router = express.Router()
 
-router.get('/getAll-tt', getAllTimetable);
-router.get('/get-tt/:year/:semester', getTimetable);
-router.post('/upload/:year/:semester', uploadFolder.single('tt-pdf'), uploadTimetable);
-router.delete('/delete-tt/:year/:semester', deleteTimetable);
+router.get('/', getAllTimetable);
+router.get('/:year/:semester', getTimetable);
+router.post('/:year/:semester', uploadFolder.single('tt-pdf'), uploadTimetable);
+router.delete('/:year/:semester', deleteTimetable);
 
 export default router;
