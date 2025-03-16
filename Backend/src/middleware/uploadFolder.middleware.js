@@ -13,10 +13,18 @@ cloudinary.config({
 // Configure Cloudinary Storage for PDFs
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: {
-        folder: 'timetables',  // Folder name in Cloudinary
-        resource_type: 'raw',  // Ensures PDF files are uploaded correctly
-        // format: async () => "pdf",  // Force file format to PDF
+    params: async (req, file) => {
+        const { year, semester } = req.params;
+        if (!year || !semester) {
+            throw new Error("Year and semester are required");
+        }
+
+        return {
+            folder: 'timetables',  // Folder name in Cloudinary
+            resource_type: 'raw',  // Ensures PDF files are uploaded correctly
+            // format: async () => "pdf",  // Force file format to PDF
+            public_id: `TIMETABLE_${year}_${semester}`,
+        };
     },
 });
 

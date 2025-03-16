@@ -7,7 +7,7 @@ export const uploadTimetable = async (req, res) => {
 
     try {
         //Fetch formdata
-        const { year, semester } = req.body;
+        const { year, semester } = req.params;
         const urlPath = req.file.path;
         const publicId = req.file.filename;
 
