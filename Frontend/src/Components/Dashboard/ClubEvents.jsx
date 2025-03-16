@@ -89,7 +89,6 @@ const ClubEvents = () => {
             imageFiles: prev.imageFiles.filter((_, i) => i !== index),
         }));
     };
-
     const handleSubmit = async () => {
         if (!newEvent.clubName || !newEvent.dateTime || !newEvent.venue || !newEvent.description) {
             toast.error("Please fill all required fields.");
@@ -97,22 +96,32 @@ const ClubEvents = () => {
         }
 
         try {
-            const response = await axios.post("/api/events/", { newEvent });
-            console.log("hri ", newEvent);
+            const formData = new FormData();
+            formData.append("clubName", newEvent.clubName);
+            formData.append("dateTime", newEvent.dateTime);
+            formData.append("venue", newEvent.venue);
+            formData.append("description", newEvent.description);
+            formData.append("guestSpeaker", newEvent.guestSpeaker || "");
 
-            // Update state with the new event
-            setNewEvent((prevEvents) => [...prevEvents, response.data.newEvent]);
+            newEvent.imageFiles.forEach((file) => {
+                formData.append("images", file);
+            });
 
-            // Clear the input fields after successful submission
+            const response = await axios.post(API_URL, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setEvents((prevEvents) => [...prevEvents, response.data.newEvent]);
+
             setNewEvent({ clubName: "", dateTime: null, venue: "", description: "", guestSpeaker: "", imageFiles: [] });
             toast.success("Event added successfully!");
 
         } catch (error) {
-
             console.error("Error adding event:", error);
             toast.error("Something went wrong. Please try again later.");
         }
     };
+
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
