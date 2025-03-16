@@ -61,7 +61,6 @@ export default function NonTeachingPage() {
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 shadow-md">
               <img
                 src={faculty.photo || "/Photos/default-avatar.png"}
-                alt={faculty.fullname}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -71,7 +70,7 @@ export default function NonTeachingPage() {
             <h3 className="text-xl font-semibold mt-4 text-gray-900">{faculty.fullname}</h3>
             <p className="text-gray-500 text-sm">{faculty.designation}</p>
             <p className="text-gray-400 text-sm mt-1">Experience: {faculty.experience} years</p>
-            <p className="text-gray-400 text-sm">Qualification: {faculty.qualification}</p>
+            <p className="text-gray-400 text-sm mt-1 ">Qualification: {faculty.qualification}</p>
           </motion.div>
         ))}
 

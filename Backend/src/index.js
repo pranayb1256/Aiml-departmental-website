@@ -10,6 +10,7 @@ import nonfacultyRoutes from "./routes/nonfaculty.routes.js";
 import eventRoutes from "./routes/event.routes.js";
 import memberRoutes from "./routes/member.routes.js";
 import auditRoutes from "./routes/audit.routes.js";
+import aluminiRoutes from "./routes/alumini.routes.js";
 const app = express();
 
 //configs
@@ -42,6 +43,8 @@ app.use("/api/events",eventRoutes)
 app.use("/api/member",memberRoutes)
 //audit routes
 app.use("/api/audit",auditRoutes)
+//alumni routes
+app.use("/api/alumini",aluminiRoutes)
 //connection 
 connectDB()
     .then(() => {
