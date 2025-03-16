@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'timetables',  // Folder name in Cloudinary
         resource_type: 'raw',  // Ensures PDF files are uploaded correctly
-        format: async () => "pdf",  // Force file format to PDF
+        // format: async () => "pdf",  // Force file format to PDF
     },
 });
 

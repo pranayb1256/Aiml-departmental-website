@@ -1,5 +1,5 @@
 import Timetable from '../models/timetable.models.js';
-
+import { v2 as cloudinary } from "cloudinary"
 
 //upload timetable
 export const uploadTimetable = async (req, res) => {
@@ -80,3 +80,19 @@ export const deleteTimetable = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete timetable' });
     }
 };
+
+export const getAllTimetable = async (req, res) => {
+    try {
+        const timetables = await Timetable.find().sort({ createdAt: -1 });
+
+        if (!timetables) {
+            return res.status(404).json({ message: 'Timetable not found' });
+        }
+
+        res.status(200).json({ timetables })
+
+    } catch (error) {
+        console.log("getAllTimetable : error: ", error);
+        res.status(500).json({ message: 'Failed to Fetch All timetable' });
+    }
+}
