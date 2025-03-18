@@ -12,6 +12,7 @@ import memberRoutes from "./routes/member.routes.js";
 import auditRoutes from "./routes/audit.routes.js";
 import aluminiRoutes from "./routes/alumini.routes.js";
 import academicsRoutes from "./routes/academics.routes.js"
+import studentRoutes from "./routes/student.routes.js";
 const app = express();
 
 //configs
@@ -24,8 +25,8 @@ app.use(
 
 
 //parsing form-data ,json ,urlencodeded ...
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true,limit: "10mb"}));
 app.use(express.static("public"));
 app.use(cookieParser()); // middleware to parse cookies
 
@@ -48,7 +49,8 @@ app.use("/api/audit", auditRoutes)
 app.use("/api/alumini", aluminiRoutes)
 //academics routes
 app.use("/api/academics", academicsRoutes)
-
+//student placed
+app.use("/api/placed-student", studentRoutes)
 //connection 
 connectDB()
     .then(() => {

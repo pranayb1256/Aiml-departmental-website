@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
         let query = {};
 
         if (clubName) {
-            query["eventId.clubName"] = clubName; // 🔥 Filter by club name
+            query["eventId.clubName"] = clubName;
         }
 
         const logs = await AuditLog.find(query).populate("eventId", "clubName");

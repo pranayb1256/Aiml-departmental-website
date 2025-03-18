@@ -51,7 +51,7 @@ const Event = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        {["AIMSA", "CSI", "ISTCE"].map((club) => (
+        {["AIMSA", "CSI", "ISTE"].map((club) => (
           <Button
             key={club}
             onClick={() => setSelectedClub(club)}

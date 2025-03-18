@@ -17,7 +17,7 @@ const clubDetails = {
     banner: "/images/CsI.jpg",
   },
   ISTE: {
-    name: "Institution of Smart Technology and Computing Engineers",
+    name: "Indian Society for Technical Education ",
     instagram: "https://www.instagram.com/isteaiml.ltce/",
     linktree:"https://linktr.ee/csiaimlltce",
     banner: "/images/ISTE.jpg",

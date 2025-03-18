@@ -22,7 +22,7 @@ function Footer() {
           <a href="#" className="text-blue-300 hover:text-blue-400"><FaTwitter size={20} /></a>
           <a href="#" className="text-blue-600 hover:text-blue-700"><FaLinkedin size={20} /></a>
           <a href="#" className="text-pink-400 hover:text-pink-500"><FaInstagram size={20} /></a>
-          <a href="#" className="text-red-500 hover:text-red-600"><FaYoutube size={20} /></a>
+          <a href="https://youtube.com/@ltceofficial8789?si=MKZTp3wosa8xsEq3" className="text-red-500 hover:text-red-600"><FaYoutube size={20} /></a>
         </div>
         <div className="mt-4">
           <p className="font-semibold">Contact Us</p>

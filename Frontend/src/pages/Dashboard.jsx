@@ -13,6 +13,7 @@ const ClubEvents = lazy(() => import("../Components/Dashboard/ClubEvents"));
 const Member = lazy(() => import("../Components/Dashboard/Member"));
 const AuditLogs = lazy(() => import("../Components/Dashboard/Audit"));
 const TimetableManager = lazy(() => import("../Components/Dashboard/Timetable"));
+const PlacedStudent = lazy(() => import("../Components/Dashboard/PlacedStudent"));
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -72,7 +73,7 @@ const AdminDashboard = () => {
 
       {/* Dashboard Description */}
       <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 3 }}>
-        Manage announcements, notices, club events, and audit logs.
+        Manage announcements, notices, club events, placed student and audit logs
       </Typography>
 
       {/* Tabs Navigation */}
@@ -88,6 +89,7 @@ const AdminDashboard = () => {
         <Tab label="Member" />
         <Tab label="Audit Logs" />
         <Tab label="Timetable" />
+        <Tab label="PlacedStudent" />
       </Tabs>
 
       {/* Content Based on Tab Selection */}
@@ -99,6 +101,7 @@ const AdminDashboard = () => {
           {tabIndex === 3 && <Member />}
           {tabIndex === 4 && <AuditLogs />}
           {tabIndex === 5 && <TimetableManager />}
+          {tabIndex === 6 && <PlacedStudent />}
 
         </Suspense>
       </Box>

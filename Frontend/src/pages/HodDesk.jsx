@@ -22,14 +22,14 @@ export default function HodDesk() {
       >
         <Card className="mt-6 w-full max-w-3xl text-center shadow-xl border-none bg-white rounded-2xl p-6 hover:scale-[1.02] transition-transform duration-300">
           <CardContent>
-            <h2 className="text-3xl font-extrabold text-gray-900">Dr. John Doe</h2>
+            <h2 className="text-3xl font-extrabold text-gray-900">Dr. Chaitrali Chaudhari</h2>
             <p className="text-gray-600 mt-2 font-medium">Head of AIML Department</p>
             <p className="text-gray-500 mt-2">PhD in Artificial Intelligence & Machine Learning</p>
             <p className="text-gray-500 mt-1">Specialization: Deep Learning, NLP</p>
             <p className="text-gray-500 mt-1">
               Email: 
-              <a href="mailto:johndoe@college.edu" className="text-blue-600 hover:underline">
-                johndoe@college.edu
+              <a href="mailto:chaitrali.chaudhari@ltce.in" className="text-blue-600 hover:underline">
+              chaitrali.chaudhari@ltce.in
               </a>
             </p>
           </CardContent>

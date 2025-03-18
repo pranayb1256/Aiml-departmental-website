@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "swiper/css";
 import "swiper/css/pagination";
-import {BrandSlider,ImageGallery,ImageCarousel,Notice,Announce, AlumniSection} from "../Components/index";
+import {BrandSlider,ImageGallery,ImageCarousel,Notice,Announce, AlumniSection,PlacedStudents} from "../Components/index";
 import { motion } from 'framer-motion';
 
 function Home() {
@@ -21,10 +21,10 @@ const [stats, setStats] = useState({
 
 useEffect(() => {
 const studentData = {
-"First Year": 100,
-"Second Year": 160,
-"Third Year": 140,
-"Fourth Year": 60,
+"First Year": 120,
+"Second Year": 150,
+"Third Year": 120,
+"Fourth Year": 120,
 };
 studentData["Total Students"] = Object.values(studentData).reduce((a, b) => a + b, 0);
 setTimeout(() => {
@@ -33,9 +33,11 @@ setStats(studentData);
 }, []);
 
 useEffect(() => {
-Object.entries(stats).forEach(([title, number], index) => {
-animateCounter(`stat-${index}`, 0, number, 2000);
-});
+  if (Object.keys(stats).length > 0) {
+    Object.entries(stats).forEach(([title, number], index) => {
+      animateCounter(`stat-${index}`, 0, number, 2000);
+    });
+  }
 }, [stats]);
 
 function animateCounter(id, start, end, duration) {
@@ -170,6 +172,9 @@ if (progress
       Your browser does not support the video tag.
     </motion.video>
   </motion.div>
+
+  <PlacedStudents/>
+  
   <div className="p-6 sm:p-12">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
         Notices & <span className="text-blue-500">Announcements</span>
@@ -190,7 +195,6 @@ if (progress
     </div>
 
   <BrandSlider />
-
   <section className="py-10 bg-white text-center">
   <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Student <span className="text-blue-500">Statistics</span>
