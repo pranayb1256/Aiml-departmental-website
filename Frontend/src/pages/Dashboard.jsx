@@ -14,6 +14,7 @@ const Member = lazy(() => import("../Components/Dashboard/Member"));
 const AuditLogs = lazy(() => import("../Components/Dashboard/Audit"));
 const TimetableManager = lazy(() => import("../Components/Dashboard/Timetable"));
 const PlacedStudent = lazy(() => import("../Components/Dashboard/PlacedStudent"));
+const Result = lazy(() => import("../Components/Dashboard/Result"));
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -90,6 +91,7 @@ const AdminDashboard = () => {
         <Tab label="Audit Logs" />
         <Tab label="Timetable" />
         <Tab label="PlacedStudent" />
+        <Tab label="Result" />
       </Tabs>
 
       {/* Content Based on Tab Selection */}
@@ -102,6 +104,7 @@ const AdminDashboard = () => {
           {tabIndex === 4 && <AuditLogs />}
           {tabIndex === 5 && <TimetableManager />}
           {tabIndex === 6 && <PlacedStudent />}
+          {tabIndex === 7 && <Result />}
 
         </Suspense>
       </Box>
