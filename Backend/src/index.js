@@ -13,7 +13,16 @@ import auditRoutes from "./routes/audit.routes.js";
 import aluminiRoutes from "./routes/alumini.routes.js";
 import academicsRoutes from "./routes/academics.routes.js"
 import studentRoutes from "./routes/student.routes.js";
+//module imports for real-time updates
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 const app = express();
+const server = createServer(app); // 'createServer(app):'Converts Express app into an HTTP server.Required because Socket.io needs an HTTP server to work.
+const io = new Server(server, {
+    cors: { origin: process.env.CORS_ORIGIN, credentials: true },
+});
+
 
 //configs
 dotenv.config({
@@ -24,9 +33,10 @@ app.use(
 );
 
 
+
 //parsing form-data ,json ,urlencodeded ...
 app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true,limit: "10mb"}));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static("public"));
 app.use(cookieParser()); // middleware to parse cookies
 
@@ -51,10 +61,26 @@ app.use("/api/alumini", aluminiRoutes)
 app.use("/api/academics", academicsRoutes)
 //student placed
 app.use("/api/placed-student", studentRoutes)
+
+
+// WebSocket Logic 
+let connectionCount = 0; // Counter for total connections
+io.on("connection", (socket) => {
+    connectionCount++;
+    console.log(`Client connected via WebSocket. Connection count: ${connectionCount}`);
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+    });
+});
+// Attach `io` to `app` so it can be accessed in controllers
+app.set("io", io);
+
+
 //connection 
 connectDB()
     .then(() => {
-        app.listen(process.env.PORT || 9000, () => {
+        server.listen(process.env.PORT || 9000, () => {
             console.log(`Server is running at Port: ${process.env.PORT}`);
         });
     })

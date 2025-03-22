@@ -227,7 +227,7 @@ function Home() {
     
       <div className="p-6 sm:p-12">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-          Notices & <span className="text-blue-500">Announcements</span>
+          Notices & <span className="text-blue-500 animate-pulse">Announcements</span>
         </h1>
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-1/2"><Notice /></div>

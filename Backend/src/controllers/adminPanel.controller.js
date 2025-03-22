@@ -132,11 +132,13 @@ export const addAnnouncement = asyncHandler(async (req, res) => {
     }
 
     const announcement = new Announcement({ text });
-
     await announcement.save();
 
+    // Emit event to all clients
+    const io = req.app.get("io"); // Get io instance from Express app
+    io.emit("new-announcement", announcement);
+
     res.status(201).json({ announcement });
-    // res.status(201).json(new ApiResponse(201, announcement, "Announcement added successfully!"));
 })
 
 export const deleteAnnouncement = asyncHandler(async (req, res) => {
@@ -151,6 +153,10 @@ export const deleteAnnouncement = asyncHandler(async (req, res) => {
         throw new ApiError(404, "announcement not found");
     }
 
+    // Emit delete event to all clients
+    const io = req.app.get("io"); // Get io instance from Express app
+    io.emit("delete-announcement", id);
+
     res.status(200).json({ success: true, message: "announcement deleted successfully" });
 });
 
@@ -161,7 +167,7 @@ export const getAllNotices = asyncHandler(async (req, res) => {
 
     const notices = await Notice.find().sort({ createdAt: -1 });
 
-    res.status(201).json({ notices });
+    res.status(200).json({ notices });
     // res.status(200).json(new ApiResponse(200, notices, "Fetched notices successfully!"));
 })
 
@@ -173,10 +179,14 @@ export const addNotice = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Notice text is required and must be a non-empty string");
     }
 
-    const notice = new Notice({ text });
-    await notice.save();
+    const newNotice = new Notice({ text });
+    await newNotice.save();
 
-    res.status(201).json({ success: true, notice });
+    // Emit event for real-time update
+    const io = req.app.get("io"); // Get `io` from app
+    io.emit("new-notice", newNotice);
+
+    res.status(201).json({ success: true, notice: newNotice });
 });
 
 // Delete a notice
@@ -192,6 +202,10 @@ export const deleteNotice = asyncHandler(async (req, res) => {
     if (!notice) {
         throw new ApiError(404, "Notice not found");
     }
+
+    // Emit event to update the frontend in real-time
+    const io = req.app.get("io");  // Get WebSocket instance
+    io.emit("delete-notice", id);  // Send deleted notice ID to clients
 
     res.status(200).json({ success: true, message: "Notice deleted successfully" });
 });
