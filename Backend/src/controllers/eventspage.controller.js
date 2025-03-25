@@ -42,6 +42,7 @@ export const createEvent = asyncHandler(async (req, res) => {
     })
   );
 
+  
   const newEvent = new Event({
     images: uploadedImages,
     clubName,
@@ -55,6 +56,10 @@ export const createEvent = asyncHandler(async (req, res) => {
 
   // ✅ Log event creation
   await logAudit(adminEmail, "CREATE", newEvent._id);
+
+  const io = req.app.get("io"); // Get io instance from Express app
+  io.emit("new-event", newEvent);
+
 
   res.status(201).json({ newEvent, message: "Event created successfully!" });
 });
@@ -138,5 +143,7 @@ export const deleteEvent = asyncHandler(async (req, res) => {
   // ✅ Log deletion
   await logAudit(adminEmail, "DELETE", eventId);
 
+  const io = req.app.get("io"); // Get io instance from Express app
+  io.emit("delete-event", eventId);
   res.status(200).json({ message: "Event deleted successfully!" });
 });

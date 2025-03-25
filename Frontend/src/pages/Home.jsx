@@ -13,6 +13,7 @@ import {
   Announce,
   AlumniSection,
   PlacedStudents,
+  Achivements,
 } from "../Components/index";
 
 function Home() {
@@ -253,6 +254,7 @@ function Home() {
       <BrandSlider />
       <AlumniSection />
       <ImageCarousel />
+      <Achivements/>
       <ImageGallery />
     </div>
   );

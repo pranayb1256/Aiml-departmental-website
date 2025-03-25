@@ -16,6 +16,7 @@ import Announce from "../Components/Announce/Announce"
 import AlumniSection from "../Components/Alumini/Alumini";
 import TimetableManager from "../Components/Dashboard/Timetable";
 import PlacedStudents from "./PlacedStudent/PlacedStudent";
+import Achivements from "./Achivement/Achivement";
 export{ 
   Header, 
   Footer, 
@@ -32,5 +33,5 @@ export{
   Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent,
   Dialog,DialogContent,DialogTitle,DialogTrigger,
   Announcements, Notices, ClubEvents, Notice,Announce,AlumniSection,TimetableManager,
-  PlacedStudents
+  PlacedStudents,Achivements
 };

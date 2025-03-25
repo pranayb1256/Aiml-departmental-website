@@ -10,6 +10,9 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import axios from "axios";
+import { io } from "socket.io-client";
+
+const SOCKET_URL = "http://localhost:8001"; // Update as needed
 
 const Event = () => {
   const [selectedClub, setSelectedClub] = useState("AIMSA");
@@ -17,26 +20,41 @@ const Event = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get("/api/events/");
-      setEvents(response.data.events || []);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-
   useEffect(() => {
+    const socket = io(SOCKET_URL, { transports: ["websocket"] });
+
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events/");
+        setEvents(response.data.events || []);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
     fetchEvents();
+
+    // Listen for new event additions
+    socket.on("new-event", (event) => {
+      setEvents((prevEvents) => [event, ...prevEvents]);
+    });
+
+    // Listen for event deletions
+    socket.on("delete-event", (deletedId) => {
+      setEvents((prevEvents) => prevEvents.filter((event) => event._id !== deletedId));
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   const filteredEvents = events.filter((event) => event.clubName === selectedClub);
 
   return (
     <div className={`p-10 bg-gray-100 min-h-screen ${isDialogOpen ? "overflow-hidden" : ""}`}>
-      {/* Page Title */}
-      <motion.h1 
-        className="text-center text-5xl font-extrabold mb-10 text-gray-900 tracking-wide" 
+      <motion.h1 className="text-center text-5xl font-extrabold mb-10 text-gray-900 tracking-wide"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -45,16 +63,15 @@ const Event = () => {
       </motion.h1>
 
       {/* Club Filter Buttons */}
-      <motion.div 
-        className={`flex justify-center text-gray-100 gap-6 mb-10 transition-opacity duration-300 ${isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      <motion.div className={`flex justify-center text-gray-100 gap-6 mb-10 transition-opacity duration-300 ${
+          isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         {["AIMSA", "CSI", "ISTE"].map((club) => (
-          <Button
-            key={club}
-            onClick={() => setSelectedClub(club)}
+          <Button key={club} onClick={() => setSelectedClub(club)}
             className={`px-6 py-3 rounded-lg text-lg text-gray-700 font-medium transition shadow-md 
               ${selectedClub === club ? "bg-blue-600 text-white" : "bg-gray-300 hover:bg-gray-400"}`}
           >
@@ -64,27 +81,23 @@ const Event = () => {
       </motion.div>
 
       {/* Event Cards Grid */}
-      <motion.div 
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 transition-opacity duration-300 ${isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      <motion.div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 transition-opacity duration-300 ${
+          isDialogOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
         {filteredEvents.map((event) => (
           <motion.div key={event._id} whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-            <Card 
-              className="p-6 cursor-pointer shadow-lg bg-white rounded-2xl transform transition hover:shadow-xl"
+            <Card className="p-6 cursor-pointer shadow-lg bg-white rounded-2xl transform transition hover:shadow-xl"
               onClick={() => {
                 setSelectedEvent(event);
                 setIsDialogOpen(true);
               }}
             >
               <CardContent className="p-0">
-                <Swiper
-                  slidesPerView={1}
-                  loop={true}
-                  autoplay={{ delay: 2000 }}
-                  pagination={{ clickable: true }}
+                <Swiper slidesPerView={1} loop={true} autoplay={{ delay: 2000 }} pagination={{ clickable: true }}
                   className="w-full h-56 rounded-xl overflow-hidden"
                 >
                   {event.images.map((src, index) => (
@@ -113,23 +126,10 @@ const Event = () => {
             </DialogTitle>
 
             {/* Swiper for Event Images */}
-            <Swiper
-              effect="coverflow"
-              grabCursor={true}
-              centeredSlides={true}
-              slidesPerView={1.2}
-              spaceBetween={20}
-              loop={true}
-              autoplay={{ delay: 2500, disableOnInteraction: false }}
-              coverflowEffect={{
-                rotate: 0,
-                stretch: 40,
-                depth: 150,
-                modifier: 1,
-                slideShadows: false,
-              }}
-              navigation
-              pagination={{ clickable: true }}
+            <Swiper effect="coverflow" grabCursor={true} centeredSlides={true} slidesPerView={1.2} spaceBetween={20}
+              loop={true} autoplay={{ delay: 2500, disableOnInteraction: false }}
+              coverflowEffect={{ rotate: 0, stretch: 40, depth: 150, modifier: 1, slideShadows: false }}
+              navigation pagination={{ clickable: true }}
               modules={[EffectCoverflow, Autoplay, Navigation, Pagination]}
               className="w-full h-80 rounded-lg shadow-lg mb-6"
             >
@@ -151,8 +151,7 @@ const Event = () => {
             </div>
 
             {/* Close Button */}
-            <Button 
-              onClick={() => setIsDialogOpen(false)} 
+            <Button onClick={() => setIsDialogOpen(false)}
               className="mt-6 w-full bg-gray-700 text-white py-3 rounded-lg hover:bg-red-600 transition"
             >
               Close
