@@ -14,6 +14,7 @@ import aluminiRoutes from "./routes/alumini.routes.js";
 import academicsRoutes from "./routes/academics.routes.js"
 import studentRoutes from "./routes/student.routes.js";
 import resultRoutes from "./routes/result.routes.js";
+import analysisRoutes from "./routes/anlyatics.routes.js";
 //module imports for real-time updates
 
 import { createServer } from "http";
@@ -65,6 +66,8 @@ app.use("/api/academics", academicsRoutes)
 app.use("/api/placed-student", studentRoutes)
 //result placed
 app.use("/api/result", resultRoutes)
+//Analytics placed
+app.use("/api/analysis",analysisRoutes )
 // WebSocket Logic 
 let connectionCount = 0; // Counter for total connections
 io.on("connection", (socket) => {

@@ -2,16 +2,16 @@ import mongoose, { Schema } from "mongoose";
 
 const eventsSchema = new Schema({
    images: {
-        type: [String], // 4(imgs) cloudinary url
+        type: [String],
     },
     clubName: {
         type: String,
         trim: true,
-        require: true,
+        required: true, 
     },
     dateTime: {
         type: Date, 
-        require: true 
+        required: true 
     },
     venue: {
         type: String,
@@ -27,8 +27,13 @@ const eventsSchema = new Schema({
         trim: true,
         default: "TBA"
     },
-}, { timestamps: true }
-);
+    eventType: { 
+        type: String,
+        trim: true,
+        enum: ["Workshop", "Hackathon", "Seminar", "Conference", "Meetup"],
+        default: "Seminar"
+    }
+}, { timestamps: true });
 
 const Event = mongoose.model('Event', eventsSchema);
 
