@@ -1,34 +1,44 @@
 import Result from "../models/result.models.js";
 import { uploadOnCloudinary } from "../utils/cloudniary.js";
+
 export const addResult = async (req, res) => {
     try {
-        const { year, semester, passPercentage, totalStudents, passedStudents, failedStudents, topperName, topperPercentage, overallTopperName, overallTopperPercentage } = req.body;
-    
-        let imageUrl = null;
-        if (req.file) {
-          const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-          if (!cloudinaryResponse) {
-            return res.status(500).json({ message: "Failed to upload image" });
-          }
-          imageUrl = cloudinaryResponse.secure_url;
+        const {
+            year, semester, passPercentage, totalStudents,
+            passedStudents, failedStudents, topperImage,
+            topperName, topperCgpa // Include these fields
+        } = req.body;
+
+        // Validate required fields
+        if (!year || !semester || !passPercentage || !totalStudents ||
+            !passedStudents || !failedStudents || !topperImage ||
+            !topperName || !topperCgpa) { // Add missing validations
+            return res.status(400).json({ message: "All fields including topperName and topperCgpa are required" });
         }
-    
+
+        // Create new result
         const newResult = new Result({
-          year,
-          semester,
-          passPercentage,
-          totalStudents,
-          passedStudents,
-          failedStudents,
-          topperImage: imageUrl,
+            year,
+            semester,
+            passPercentage,
+            totalStudents,
+            passedStudents,
+            failedStudents,
+            topperImage,
+            topperName, // Include topperName
+            topperCgpa  // Include topperCgpa
         });
-    
+
+        // Save result to database
         await newResult.save();
-        res.status(201).json(newResult);
-      } catch (error) {
+
+        res.status(201).json({ message: "Result added successfully", result: newResult });
+    } catch (error) {
+        console.error("Error adding result:", error);
         res.status(500).json({ message: "Error adding result" });
-      }
+    }
 };
+
 
 export const getResults = async (req, res) => {
     try {
@@ -58,34 +68,34 @@ export const getTopper = async (req, res) => {
 export const updateResult = async (req, res) => {
     try {
         const { year, semester, passPercentage, totalStudents, passedStudents, failedStudents, topperName, topperPercentage, overallTopperName, overallTopperPercentage } = req.body;
-    
+
         let imageUrl = req.body.image; // Default to existing image
-    
+
         if (req.file) {
-          const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-          if (cloudinaryResponse) {
-            imageUrl = cloudinaryResponse.secure_url;
-          }
+            const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
+            if (cloudinaryResponse) {
+                imageUrl = cloudinaryResponse.secure_url;
+            }
         }
-    
+
         const updatedResult = await Result.findByIdAndUpdate(
-          req.params.id,
-          {
-            year,
-            semester,
-            passPercentage,
-            totalStudents,
-            passedStudents,
-            failedStudents,
-            topperImage: imageUrl,
-          },
-          { new: true }
+            req.params.id,
+            {
+                year,
+                semester,
+                passPercentage,
+                totalStudents,
+                passedStudents,
+                failedStudents,
+                topperImage: imageUrl,
+            },
+            { new: true }
         );
-    
+
         res.json(updatedResult);
-      } catch (error) {
+    } catch (error) {
         res.status(500).json({ message: "Error updating result" });
-      }
+    }
 };
 
 // Delete a result by ID

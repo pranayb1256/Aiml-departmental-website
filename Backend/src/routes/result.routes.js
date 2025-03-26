@@ -10,7 +10,7 @@ import { upload } from "../middleware/multer.middleware.js";
 const router = express.Router();
 
 // Route to add a new result
-router.post("/", upload.single("topperImage"), addResult);
+router.post("/", addResult);
 
 // Route to get results by year and/or semester
 router.get("/", getResults);
@@ -19,7 +19,7 @@ router.get("/", getResults);
 router.get("/topper", getTopper);
 
 //Route to get the update department topper
-router.put("/:id", upload.single("topperImage"), updateResult);
+router.put("/:id", updateResult);
 
 // Route to delete a result
 router.delete("/:id", deleteResult);
