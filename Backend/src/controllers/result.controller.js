@@ -20,15 +20,7 @@ export const addResult = async (req, res) => {
           totalStudents,
           passedStudents,
           failedStudents,
-          topper: {
-            name: topperName,
-            percentage: topperPercentage,
-            image: imageUrl, // Store the Cloudinary image URL
-          },
-          overallTopper: {
-            name: overallTopperName,
-            percentage: overallTopperPercentage,
-          },
+          topperImage: imageUrl,
         });
     
         await newResult.save();
@@ -85,15 +77,7 @@ export const updateResult = async (req, res) => {
             totalStudents,
             passedStudents,
             failedStudents,
-            topper: {
-              name: topperName,
-              percentage: topperPercentage,
-              image: imageUrl,
-            },
-            overallTopper: {
-              name: overallTopperName,
-              percentage: overallTopperPercentage,
-            },
+            topperImage: imageUrl,
           },
           { new: true }
         );
