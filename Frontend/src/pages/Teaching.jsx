@@ -62,7 +62,7 @@ export default function TeachingPage() {
             {/* Faculty Image */}
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
               <img
-                src={faculty.photo || "/Photos/default-avatar.png"}
+                src={faculty.profileImage || "/Photos/avatar.png"}
                 alt={faculty.fullName}
                 className="w-full h-full object-cover"
                 loading="lazy"
