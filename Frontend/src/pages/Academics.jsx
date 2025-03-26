@@ -8,8 +8,9 @@ import axios from "axios";
 import { message } from "antd";
 
 const Academics = () => {
-  const [selectedYear, setSelectedYear] = useState("FE");
   const [showResults, setShowResults] = useState(false);
+  const [selectedYear, setSelectedYear] = useState("FE");
+  const [selectedSemester, setSelectedSemester] = useState("1");
   const [timetableUrl, setTimetableUrl] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,7 @@ const Academics = () => {
   useEffect(() => {
     fetchResults();
     fetchTimetable();
-  }, [selectedYear]);
+  }, [selectedYear, selectedSemester]); // Fixed dependency array
 
   const fetchResults = async () => {
     setLoading(true);
@@ -32,10 +33,10 @@ const Academics = () => {
 
   const fetchTimetable = async () => {
     try {
-      const response = await axios.get(`/api/timetable/${selectedYear}/current`);
+      const response = await axios.get(`/api/academics/${selectedYear}/${selectedSemester}`);
       setTimetableUrl(response.data.url);
     } catch (error) {
-      setTimetableUrl("");
+      setTimetableUrl(""); // If no timetable found
     }
   };
 
@@ -69,6 +70,7 @@ const Academics = () => {
         Academics - <span className="text-blue-500">AIML</span>
       </motion.h1>
 
+      {/* Year Selection */}
       <div className="flex justify-center gap-4 mb-6">
         {["FE", "SE", "TE", "BE"].map((year) => (
           <Button
@@ -81,24 +83,44 @@ const Academics = () => {
         ))}
       </div>
 
+      {/* Semester Selection */}
+      <div className="flex justify-center gap-4 mb-6">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+          <Button
+            key={sem}
+            className={`px-4 py-2 rounded ${selectedSemester == sem ? "bg-blue-500 text-white" : "bg-gray-300"}`}
+            onClick={() => setSelectedSemester(sem)}
+          >
+            Semester {sem}
+          </Button>
+        ))}
+      </div>
+
+      {/* Toppers Section */}
       <Toppers selectedResult={selectedResult} selectedYear={selectedYear} />
 
+      {/* Academic Calendar Section */}
       <Section title="Academic Calendar" icon={<FaCalendarAlt className="text-red-500" />}>
         <a href="/calendar/academic_calendar.pdf" className="text-blue-500 hover:underline" download>
           Download Academic Calendar
         </a>
       </Section>
 
-      <Section title="Timetable" icon={<FaClock className="text-blue-500" />}>
+      {/* Timetable Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold flex items-center text-gray-700 mb-4">
+          <FaClock className="text-blue-500 mr-2" /> Timetable
+        </h2>
         {timetableUrl ? (
           <a href={timetableUrl} className="text-blue-500 hover:underline" download>
-            Download {selectedYear} Timetable
+            Download {selectedYear} - Semester {selectedSemester} Timetable
           </a>
         ) : (
           <p className="text-gray-500">No timetable available</p>
         )}
-      </Section>
+      </div>
 
+      {/* Show Result Analysis Button */}
       <div className="flex justify-center mt-6">
         <Button
           onClick={toggleResults}
@@ -108,6 +130,7 @@ const Academics = () => {
         </Button>
       </div>
 
+      {/* Results Analysis Chart */}
       {showResults && selectedResult && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -123,6 +146,7 @@ const Academics = () => {
   );
 };
 
+/* Toppers Component */
 const Toppers = ({ selectedResult, selectedYear }) => {
   return (
     <div className="mt-6 text-center">
@@ -146,6 +170,7 @@ const Toppers = ({ selectedResult, selectedYear }) => {
   );
 };
 
+/* Section Wrapper Component */
 const Section = ({ title, icon, children }) => (
   <div className="mb-8">
     <h2 className="text-2xl font-semibold flex items-center text-gray-700 mb-4">
@@ -154,5 +179,4 @@ const Section = ({ title, icon, children }) => (
     {children}
   </div>
 );
-
 export default Academics;

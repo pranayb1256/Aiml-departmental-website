@@ -10,11 +10,12 @@ const timetableSchema = new Schema({
     },
     year: {
         type: String,
-        required: true
+        required: true,
+        enum:["FE", "SE", "TE", "BE",]
     },
     semester: {
         type: String,
-        required: true
+        required: true,
     }
 }, { timestamps: true });
 
