@@ -1,126 +1,142 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Table, Button, Modal, Input, Select, message, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { Table, Button, Select, Input, Card, Row, Col } from "antd";
-import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 
 const { Option } = Select;
 
-const Result = () => {
+const Results = () => {
   const [results, setResults] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [year, setYear] = useState("");
-  const [semester, setSemester] = useState("");
-  const [search, setSearch] = useState("");
-  const [toppers, setToppers] = useState({});
-  const [overallPassPercentage, setOverallPassPercentage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newResult, setNewResult] = useState({
+    year: "FE",
+    semester: 1,
+    passPercentage: "",
+    totalStudents: "",
+    passedStudents: "",
+    failedStudents: "",
+    topper: { name: "", percentage: "", image: null },
+    overallTopper: { name: "", percentage: "" },
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get("/api/results").then((res) => {
-      setResults(res.data);
-      setFilteredResults(res.data);
-      calculateToppers(res.data);
-      calculateOverallPassPercentage(res.data);
-    });
+    fetchResults();
   }, []);
 
-  const handleFilter = () => {
-    let filtered = results;
-    if (year) {
-      filtered = filtered.filter((res) => res.year === year);
+  const fetchResults = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get("/api/result");
+      setResults(data);
+    } catch (error) {
+      message.error("Failed to fetch results");
     }
-    if (semester) {
-      filtered = filtered.filter((res) => res.semester === semester);
+    setLoading(false);
+  };
+
+  const handleAddResult = async () => {
+    console.log("Submitting Result:", newResult); // Debugging line
+    
+    try {
+      await axios.post("/api/result", newResult);
+      message.success("Result added successfully");
+      fetchResults();
+      setIsModalOpen(false);
+    } catch (error) {
+      message.error("Error adding result");
     }
-    if (search) {
-      filtered = filtered.filter((res) =>
-        res.studentName.toLowerCase().includes(search.toLowerCase())
+  };
+  
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`/api/result/${id}`);
+      message.success("Result deleted successfully");
+      fetchResults();
+    } catch (error) {
+      message.error("Error deleting result");
+    }
+  };
+
+  const handleImageUpload = async ({ topperImage }) => {
+    const formData = new FormData();
+    formData.append("file", topperImage);
+    formData.append("upload_preset", "your_upload_preset");
+  
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
+        formData
       );
+  
+      setNewResult((prev) => ({
+        ...prev,
+        topper: { ...prev.topper, image: response.data.secure_url },
+      }));
+    } catch (error) {
+      message.error("Image upload failed!");
     }
-    setFilteredResults(filtered);
   };
-
-  const calculateToppers = (data) => {
-    const topperByYear = {};
-    ["FE", "SE", "TE", "BE"].forEach((year) => {
-      const students = data.filter((res) => res.year === year);
-      if (students.length > 0) {
-        topperByYear[year] = students.reduce((max, student) =>
-          student.percentage > max.percentage ? student : max
-        );
-      }
-    });
-    setToppers(topperByYear);
-  };
-
-  const calculateOverallPassPercentage = (data) => {
-    const passedStudents = data.filter((res) => res.percentage >= 40).length;
-    const totalStudents = data.length;
-    setOverallPassPercentage(((passedStudents / totalStudents) * 100).toFixed(2));
-  };
-
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.text("Result Analysis Report", 10, 10);
-    doc.autoTable({
-      head: [["Student Name", "Year", "Semester", "Percentage"]],
-      body: filteredResults.map((res) => [
-        res.studentName,
-        res.year,
-        res.semester,
-        res.percentage,
-      ]),
-    });
-    doc.save("result_analysis.pdf");
-  };
+  
+  
 
   const columns = [
-    { title: "Student Name", dataIndex: "studentName", key: "studentName" },
     { title: "Year", dataIndex: "year", key: "year" },
     { title: "Semester", dataIndex: "semester", key: "semester" },
-    { title: "Percentage", dataIndex: "percentage", key: "percentage" },
+    { title: "Pass %", dataIndex: "passPercentage", key: "passPercentage" },
+    { title: "Total Students", dataIndex: "totalStudents", key: "totalStudents" },
+    { title: "Passed", dataIndex: "passedStudents", key: "passedStudents" },
+    { title: "Failed", dataIndex: "failedStudents", key: "failedStudents" },
+    { title: "Topper", dataIndex: ["topper", "name"], key: "topper" },
+    {
+      title: "Image",
+      dataIndex: ["topper", "image"],
+      key: "image",
+      render: (image) =>
+        image ? (
+          <img src={image} alt="Topper" style={{ width: 50, height: 50, borderRadius: "50%" }} />
+        ) : (
+          "No Image"
+        ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Button onClick={() => handleDelete(record._id)} danger>
+          Delete
+        </Button>
+      ),
+    },
   ];
+  
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Result Analysis Dashboard</h1>
-      <div className="flex space-x-4 mb-4">
-        <Select placeholder="Select Year" className="w-40" onChange={setYear} allowClear>
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold mb-4">Results Management</h2>
+      <Button type="primary" onClick={() => setIsModalOpen(true)}>Add Result</Button>
+      <Table columns={columns} dataSource={results} loading={loading} rowKey="_id" className="mt-4" />
+
+      <Modal title="Add New Result" visible={isModalOpen} onOk={handleAddResult} onCancel={() => setIsModalOpen(false)}>
+        <Select value={newResult.year} onChange={(value) => setNewResult({ ...newResult, year: value })} className="w-full mb-2">
           <Option value="FE">FE</Option>
           <Option value="SE">SE</Option>
           <Option value="TE">TE</Option>
           <Option value="BE">BE</Option>
         </Select>
-        <Select placeholder="Select Semester" className="w-40" onChange={setSemester} allowClear>
-          {[...Array(8)].map((_, i) => (
-            <Option key={i + 1} value={`Sem-${i + 1}`}>{`Sem-${i + 1}`}</Option>
-          ))}
-        </Select>
-        <Input placeholder="Search by Student Name" className="w-60" onChange={(e) => setSearch(e.target.value)} />
-        <Button type="primary" onClick={handleFilter}>Filter</Button>
-        <Button type="default" onClick={exportToPDF}>Export PDF</Button>
-      </div>
-
-      <Row gutter={[16, 16]} className="mb-6">
-        {Object.entries(toppers).map(([year, topper]) => (
-          <Col key={year} span={6}>
-            <Card title={`${year} Topper`} bordered={false} className="shadow-md">
-              <img src={topper.image} alt={topper.studentName} className="w-20 h-20 rounded-full mx-auto mb-2" />
-              <p className="text-center font-semibold">{topper.studentName}</p>
-              <p className="text-center text-gray-500">{topper.percentage}%</p>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      <Card title="Overall Passing Percentage" className="shadow-md text-center mb-6">
-        <h2 className="text-3xl font-bold text-blue-600">{overallPassPercentage}%</h2>
-      </Card>
-
-      <Table columns={columns} dataSource={filteredResults} rowKey="id" />
+        <Input type="number" placeholder="Semester" value={newResult.semester} onChange={(e) => setNewResult({ ...newResult, semester: e.target.value })} className="mb-2" />
+        <Input type="number" placeholder="Pass Percentage" value={newResult.passPercentage} onChange={(e) => setNewResult({ ...newResult, passPercentage: e.target.value })} className="mb-2" />
+        <Input type="number" placeholder="Total Students" value={newResult.totalStudents} onChange={(e) => setNewResult({ ...newResult, totalStudents: e.target.value })} className="mb-2" />
+        <Input type="number" placeholder="Passed Students" value={newResult.passedStudents} onChange={(e) => setNewResult({ ...newResult, passedStudents: e.target.value })} className="mb-2" />
+        <Input type="number" placeholder="Failed Students" value={newResult.failedStudents} onChange={(e) => setNewResult({ ...newResult, failedStudents: e.target.value })} className="mb-2" />
+        <Input placeholder="Topper Name" value={newResult.topper.name} onChange={(e) => setNewResult({ ...newResult, topper: { ...newResult.topper, name: e.target.value } })} className="mb-2" />
+        <Input type="number" placeholder="Topper Cgpa" value={newResult.topper.percentage} onChange={(e) => setNewResult({ ...newResult, topper: { ...newResult.topper, percentage: e.target.value } })} className="mb-2" />
+        <Upload beforeUpload={() => false} onChange={handleImageUpload} className="mb-2">
+          <Button icon={<UploadOutlined />}>Upload Topper Image</Button>
+        </Upload>
+      </Modal>
     </div>
   );
 };
 
-export default Result;
+export default Results;
