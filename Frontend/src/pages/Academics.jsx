@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { FaCalendarAlt, FaClock, FaToggleOn, FaToggleOff } from "react-icons/fa";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { Button } from "../Components/index";
 import axios from "axios";
 import { message } from "antd";
@@ -24,7 +22,7 @@ const Academics = () => {
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/result?year=${selectedYear}`);
+      const { data } = await axios.get(`/api/result`);
       setResults(data);
     } catch (error) {
       message.error("Failed to fetch academic results");
@@ -42,7 +40,7 @@ const Academics = () => {
   };
 
   const toggleResults = () => setShowResults(!showResults);
-  const selectedResult = results.length > 0 ? results[0] : {};
+  const selectedResult = results.find((r) => r.year === selectedYear) || {};
 
   const chartData = {
     labels: ["Pass %", "Total Students", "Passed", "Failed"],
@@ -83,6 +81,8 @@ const Academics = () => {
         ))}
       </div>
 
+      <Toppers selectedResult={selectedResult} selectedYear={selectedYear} />
+
       <Section title="Academic Calendar" icon={<FaCalendarAlt className="text-red-500" />}>
         <a href="/calendar/academic_calendar.pdf" className="text-blue-500 hover:underline" download>
           Download Academic Calendar
@@ -115,24 +115,33 @@ const Academics = () => {
           transition={{ duration: 0.5 }}
           className="max-w-lg mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg"
         >
-          <h3 className="text-xl font-semibold text-gray-700 text-center">Performance Statistics</h3>
+          <h3 className="text-xl font-semibold text-gray-700 text-center mb-4">Performance Statistics</h3>
           <Bar data={chartData} options={{ maintainAspectRatio: true, responsive: true }} />
-
-          <div className="mt-6 text-center">
-            <h3 className="text-xl font-semibold text-gray-700">Topper</h3>
-            <p className="text-lg text-gray-600">
-              {selectedResult.topper?.name} - {selectedResult.topper?.percentage}%
-            </p>
-            {selectedResult.topper?.image && (
-              <img
-                src={selectedResult.topper.image}
-                alt="Topper"
-                className="w-32 h-32 object-cover rounded-full mx-auto mt-3 border border-gray-300 shadow-md"
-              />
-            )}
-          </div>
         </motion.div>
       )}
+    </div>
+  );
+};
+
+const Toppers = ({ selectedResult, selectedYear }) => {
+  return (
+    <div className="mt-6 text-center">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Topper - {selectedYear}</h2>
+      <div className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md w-72 mx-auto">
+        {selectedResult.topperImage ? (
+          <img
+            src={selectedResult.topperImage}
+            alt={selectedResult.topperName}
+            className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-md mb-4"
+          />
+        ) : (
+          <div className="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center mb-4">
+            <span className="text-gray-500">No Image</span>
+          </div>
+        )}
+        <h3 className="text-lg font-semibold text-gray-700">{selectedResult.topperName || "TBA"}</h3>
+        <p className="text-gray-600">CGPA: {selectedResult.topperCgpa || "N/A"}</p>
+      </div>
     </div>
   );
 };
