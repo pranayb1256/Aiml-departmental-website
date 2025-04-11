@@ -48,6 +48,7 @@ const ClubMemberPage = () => {
   };
 
   const positionHierarchy = [
+    "Faculty Incharge",
     "President",
     "Vice President",
     "General Secretary",

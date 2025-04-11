@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const MemberSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  yearBranch: { type: String, required: true },
+  yearBranch: { type: String,},
   position: { type: String, required: true },
-  photo: { type: String, required: true },
+  photo: { type: String,},
   linkedin: { type: String },
   instagram: { type: String },
   github: { type: String },
