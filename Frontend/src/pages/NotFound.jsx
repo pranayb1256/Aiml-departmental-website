@@ -19,7 +19,7 @@ export default function NotFound() {
       </div>
 
       <img
-        src="https://i.imgur.com/qIufhof.png"
+        src="https://res.cloudinary.com/dzydycrjo/image/upload/v1744388743/vk98lvnjwlbv0lhxur1u.png"
         alt="Broken robot"
         className="w-64 mt-8 opacity-90"
       />
