@@ -16,6 +16,9 @@ import Login from './pages/Login';
 import TeamMember from "./pages/TeamMembers";
 import { Toaster } from "react-hot-toast";
 
+//import for error page
+import NotFound from './pages/NotFound.jsx';
+
 const PrivateRoute = ({ element }) => {
   const token = localStorage.getItem("token");
   return token ? element : <Navigate to="/login" />;
@@ -36,6 +39,9 @@ const router = createBrowserRouter(
       <Route path="dashboard" element={<PrivateRoute element={<Dashboard />} />} />
       {/* <Route path="login" element={<Login />} /> */}
       {/* <Route path="admin" element={<PrivateRoute element={<AdminDashboard />} />} /> */}
+
+      {/* // Route for Error Pages  */}
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
