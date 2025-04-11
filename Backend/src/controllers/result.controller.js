@@ -6,17 +6,15 @@ export const addResult = async (req, res) => {
         const {
             year, semester, passPercentage, totalStudents,
             passedStudents, failedStudents, topperImage,
-            topperName, topperCgpa // Include these fields
+            topperName, topperCgpa, students // 👈 Add students
         } = req.body;
 
-        // Validate required fields
         if (!year || !semester || !passPercentage || !totalStudents ||
             !passedStudents || !failedStudents || !topperImage ||
-            !topperName || !topperCgpa) { // Add missing validations
+            !topperName || !topperCgpa) {
             return res.status(400).json({ message: "All fields including topperName and topperCgpa are required" });
         }
 
-        // Create new result
         const newResult = new Result({
             year,
             semester,
@@ -25,13 +23,12 @@ export const addResult = async (req, res) => {
             passedStudents,
             failedStudents,
             topperImage,
-            topperName, // Include topperName
-            topperCgpa  // Include topperCgpa
+            topperName,
+            topperCgpa,
+            students: students || [] // 👈 Include students
         });
 
-        // Save result to database
         await newResult.save();
-
         res.status(201).json({ message: "Result added successfully", result: newResult });
     } catch (error) {
         console.error("Error adding result:", error);
@@ -107,5 +104,23 @@ export const deleteResult = async (req, res) => {
         res.status(200).json({ message: "Result deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error deleting result", error });
+    }
+};
+
+export const getClearedBacklogs = async (req, res) => {
+    try {
+        const { year, semester } = req.query;
+        const filter = {};
+        if (year) filter.year = year;
+        if (semester) filter.semester = semester;
+
+        const results = await Result.find(filter);
+        const clearedStudents = results.flatMap(result =>
+            result.students.filter(student => student.clearedBacklog)
+        );
+
+        res.status(200).json(clearedStudents);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching cleared backlog students", error });
     }
 };

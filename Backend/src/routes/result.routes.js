@@ -4,7 +4,8 @@ import {
     getResults, 
     getTopper, 
     updateResult, 
-    deleteResult 
+    deleteResult ,
+    getClearedBacklogs
 } from "../controllers/result.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 const router = express.Router();
@@ -23,5 +24,7 @@ router.put("/:id", updateResult);
 
 // Route to delete a result
 router.delete("/:id", deleteResult);
+
+router.get("/cleared-backlogs", getClearedBacklogs);
 
 export default router;

@@ -1,15 +1,24 @@
 import mongoose from "mongoose";
+
+const studentSchema = new mongoose.Schema({
+  name: String,
+  rollNo: String,
+  cgpa: Number,
+  backlog: Boolean,
+  clearedBacklog: Boolean
+});
+
 const resultSchema = new mongoose.Schema({
-    topperImage: String,
-    topperName: String,    // Name of the topper
-    topperCgpa: Number,
-    year: String,
-    semester: Number,
-    passPercentage: Number,
-    totalStudents: Number,
-    passedStudents: Number,
-    failedStudents: Number,
-    avgCgpa: Number,
-}, { timestamps: true, });
+  year: String,
+  semester: String,
+  passPercentage: Number,
+  totalStudents: Number,
+  passedStudents: Number,
+  failedStudents: Number,
+  topperImage: String,
+  topperName: String,
+  topperCgpa: Number,
+  students: [studentSchema],
+}, { timestamps: true });
 
 export default mongoose.model("Result", resultSchema);
