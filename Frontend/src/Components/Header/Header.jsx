@@ -33,7 +33,7 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src="https://ltce.in/img_ltce/logo-b.png"
+              src="https://media.licdn.com/dms/image/v2/C510BAQGLxdb0YqUmAw/company-logo_200_200/company-logo_200_200/0/1630628751062/lokmanya_tilak_college_of_engineering_logo?e=1750291200&v=beta&t=eMVFjnNKST5E1IEghrcXFSU5o0bUa7uDtKX7pgAYkfo"
               className="mr-3 h-12"
               alt="Logo"
             />
