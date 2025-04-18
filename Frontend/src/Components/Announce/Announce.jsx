@@ -6,7 +6,7 @@ export default function Announce() {
     const [announcements, setAnnouncements] = useState([]);
 
     useEffect(() => {
-        const socket = io("http://localhost:8001");
+        const socket = io("https://aiml-departmental-website-n.onrender.com");
 
         fetch("/api/admin/announcements")
             .then((res) => res.json())

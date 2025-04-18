@@ -33,7 +33,7 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const endpoint = isRegister ? "api/admin/register" : "api/admin/login";
+      const endpoint = isRegister ? "/api/admin/register" : "/api/admin/login";
       const res = await axios.post(endpoint, credentials);
 
       if (res.data.success) {

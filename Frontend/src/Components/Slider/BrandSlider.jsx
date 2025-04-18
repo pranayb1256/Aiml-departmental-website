@@ -11,7 +11,7 @@ export default function BrandSlider() {
     const fetchRecruiters = async () => {
       try {
         const response = await axios.get(
-          "api/homepage/get-images"
+          "/api/homepage/get-images"
         );
 
         console.log("API Response:", response.data); // Debugging

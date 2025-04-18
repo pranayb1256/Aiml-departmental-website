@@ -8,7 +8,7 @@ const AlumniSection = () => {
   useEffect(() => {
     const fetchAlumniData = async () => {
       try {
-        const response = await fetch("api/alumini/"); // Change URL for production
+        const response = await fetch("/api/alumini/"); // Change URL for production
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

@@ -28,7 +28,7 @@ const Results = () => {
         const fetchResults = async () => {
             setLoading(true);
             try {
-                const { data } = await axios.get("api/result");
+                const { data } = await axios.get("/api/result");
                 setResults(data);
             } catch (error) {
                 message.error("Failed to fetch results");
@@ -47,7 +47,7 @@ const Results = () => {
         }
 
         try {
-            await axios.post("api/result", newResult);
+            await axios.post("/api/result", newResult);
             message.success("Result added successfully");
             setIsModalOpen(false);
             setIsImgUploaded(false);
@@ -59,7 +59,7 @@ const Results = () => {
     // Handle deleting a result
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`api/result/${id}`);
+            await axios.delete(`/api/result/${id}`);
             message.success("Result deleted successfully");
             setResults((prev) => prev.filter((result) => result._id !== id));
         } catch (error) {
