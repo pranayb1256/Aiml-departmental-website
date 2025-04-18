@@ -25,8 +25,9 @@ const Member = () => {
   }, [selectedClub]);
 
   const fetchMembers = async (club) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     try {
-      const res = await axios.get(`/api/member/${club}`);
+      const res = await axios.get(`${apiUrl}/member/${club}`);
       setMembers(res.data.members);
     } catch (error) {
       toast.error("Failed to fetch members.");
@@ -41,7 +42,8 @@ const Member = () => {
   const addMember = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/member", { ...formData, club: selectedClub });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await axios.post(`${apiUrl}/member`, { ...formData, club: selectedClub });
       setMembers([...members, res.data.member]);
       toast.success("Member added successfully!");
       setFormData({
@@ -76,7 +78,8 @@ const Member = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`/api/member/${editingId}`, { ...formData, club: selectedClub });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await axios.put(`${apiUrl}/member/${editingId}`, { ...formData, club: selectedClub });
       const updatedList = members.map((m) => (m._id === editingId ? res.data.member : m));
       setMembers(updatedList);
       toast.success("Member updated successfully!");
@@ -100,7 +103,8 @@ const Member = () => {
   const deleteMember = async (id) => {
     if (window.confirm("Are you sure you want to delete this member?")) {
       try {
-        await axios.delete(`/api/member/${id}`);
+      const apiUrl = import.meta.env.VITE_API_URL;
+        await axios.delete(`${apiUrl}/member/${id}`);
         setMembers(members.filter((m) => m._id !== id));
         toast.success("Member deleted successfully!");
       } catch (error) {

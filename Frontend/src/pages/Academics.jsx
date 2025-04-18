@@ -22,11 +22,12 @@ const Academics = () => {
   const [calendar, setCalendar] = useState(null);
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     fetchResults();
     fetchAllTimetables();
     const fetchCalendar = async () => {
       try {
-        const res = await axios.get("/api/academics/calender");
+        const res = await axios.get(`${apiUrl}/academics/calender`);
         if (res.data && res.data.length > 0) {
           const filtered = res.data.find((item) => item.yearLevel === year);
           setCalendar(filtered || null);
@@ -39,9 +40,11 @@ const Academics = () => {
   }, [year]);
 
   const fetchResults = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/result`);
+      const { data } = await axios.get(`${apiUrl}/result`);
       setResults(data);
     } catch (error) {
       message.error("Failed to fetch academic results");
@@ -51,7 +54,9 @@ const Academics = () => {
 
   const fetchAllTimetables = async () => {
     try {
-      const response = await axios.get("/api/academics/timetable");
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await axios.get(`${apiUrl}/academics/timetable`);
       const formattedTimetables = {};
 
       response.data.timetables.forEach(({ year, semester, urlA, urlB }) => {

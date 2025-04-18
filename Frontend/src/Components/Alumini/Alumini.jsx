@@ -5,10 +5,12 @@ const AlumniSection = () => {
   const [alumniData, setAlumniData] = useState([]);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const fetchAlumniData = async () => {
       try {
-        const response = await fetch("/api/alumini/"); // Change URL for production
+        const response = await fetch(`${apiUrl}alumini/`); // Change URL for production
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

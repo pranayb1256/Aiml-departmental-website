@@ -7,7 +7,8 @@ const Analytics = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("/api/analysis/stats")
+    const apiUrl = import.meta.env.VITE_API_URL;
+    axios.get(`${apiUrl}/analysis/stats`)
       .then((res) => setData(res.data))
       .catch((err) => console.error("Error fetching analytics:", err))
       .finally(() => setLoading(false));

@@ -30,8 +30,7 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-const API_URL = "/api/events/";
+const API_URL = import.meta.env.VITE_API_URL;
 const clubOptions = ["AIMSA", "CSI", "ISTCE"];
 const convertToIST = (date) =>
   dayjs.utc(date).tz("Asia/Kolkata").format("DD/MM/YYYY hh:mm A");

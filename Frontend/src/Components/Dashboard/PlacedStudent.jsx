@@ -15,9 +15,11 @@ const PlacedStudent = () => {
   }, []);
 
   const fetchStudents = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     setLoading(true);
     try {
-      const response = await axios.get("/api/placed-student");
+      const response = await axios.get(`${apiUrl}/placed-student`);
       setStudents(response.data);
     } catch (error) {
       toast.error("Failed to fetch students.");
@@ -58,12 +60,16 @@ const PlacedStudent = () => {
       formDataToSend.append("image", formData.image); // Append image
 
       if (editingStudentId) {
-        await axios.put(`/api/placed-student/${editingStudentId}`, formDataToSend, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+        await axios.put(`${apiUrl}/placed-student/${editingStudentId}`, formDataToSend, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         toast.success("Student updated successfully!");
       } else {
-        await axios.post("/api/placed-student", formDataToSend, {
+         const apiUrl = import.meta.env.VITE_API_URL;
+
+        await axios.post(`${apiUrl}/placed-student`, formDataToSend, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         toast.success("Student added successfully!");
@@ -90,7 +96,9 @@ const PlacedStudent = () => {
 
     setLoading(true);
     try {
-      await axios.delete(`/api/placed-student/${id}`);
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+      await axios.delete(`${apiUrl}/placed-student/${id}`);
       toast.success("Student deleted successfully!");
       fetchStudents();
     } catch (error) {

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { MdDelete, MdUploadFile } from "react-icons/md";
 
-const API_URL = "/api/academic-calendar";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const AcademicCalendarManager = () => {
   const [year, setYear] = useState("FE");
@@ -165,9 +165,7 @@ const AcademicCalendarManager = () => {
             </div>
           ))
         ) : (
-          <Typography className="text-gray-500">
-            No calendars found.
-          </Typography>
+          <Typography className="text-gray-500">No calendars found.</Typography>
         )}
       </div>
     </div>

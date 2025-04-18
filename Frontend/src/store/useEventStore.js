@@ -2,11 +2,12 @@ import { create } from "zustand";
 
 const useEventStore = create((set) => ({
   events: [],
-  
+
   // Fetch events from the backend
   fetchEvents: async () => {
     try {
-      const res = await fetch("/api/events");
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/events`);
       const data = await res.json();
       set({ events: data });
     } catch (error) {
@@ -17,7 +18,9 @@ const useEventStore = create((set) => ({
   // Add a new event
   addEvent: async (event) => {
     try {
-      const res = await fetch("/api/events", {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const res = await fetch(`${apiUrl}/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(event),
@@ -32,8 +35,12 @@ const useEventStore = create((set) => ({
   // Delete an event
   deleteEvent: async (id) => {
     try {
-      await fetch(`/api/events/${id}`, { method: "DELETE" });
-      set((state) => ({ events: state.events.filter((event) => event._id !== id) }));
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      await fetch(`${apiUrl}/events/${id}`, { method: "DELETE" });
+      set((state) => ({
+        events: state.events.filter((event) => event._id !== id),
+      }));
     } catch (error) {
       console.error("Error deleting event:", error);
     }

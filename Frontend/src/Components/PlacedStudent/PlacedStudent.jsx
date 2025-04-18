@@ -4,10 +4,10 @@ import axios from "axios";
 
 const PlacedStudents = () => {
   const [students, setStudents] = useState([]);
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     axios
-      .get("/api/placed-student")
+      .get(`${apiUrl}/placed-student`)
       .then((response) => setStudents(response.data))
       .catch((error) => console.error("Error fetching students:", error));
   }, []);

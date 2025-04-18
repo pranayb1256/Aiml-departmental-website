@@ -9,9 +9,11 @@ export default function BrandSlider() {
 
   useEffect(() => {
     const fetchRecruiters = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
       try {
         const response = await axios.get(
-          "/api/homepage/get-images"
+          `${apiUrl}/homepage/get-images`
         );
 
         console.log("API Response:", response.data); // Debugging

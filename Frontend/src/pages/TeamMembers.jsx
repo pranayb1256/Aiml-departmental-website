@@ -35,8 +35,9 @@ const ClubMemberPage = () => {
 
   const fetchMembers = async (club) => {
     setLoading(true);
+    const apiUrl = import.meta.env.VITE_API_URL;
     try {
-      const res = await axios.get(`/api/member/${club}`);
+      const res = await axios.get(`${apiUrl}/member/${club}`);
       console.log(`API Response for ${club}:`, res.data);
       setMembers(res.data?.members || []);
     } catch (error) {

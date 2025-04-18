@@ -11,8 +11,9 @@ const Notices = () => {
 
   // Fetch Notices
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     axios
-      .get("/api/admin/notices")
+      .get(`${apiUrl}/admin/notices`)
       .then((res) => {
         console.log("Fetched notices:", res.data);
         setNotices(Array.isArray(res.data.notices) ? res.data.notices : []);
@@ -23,9 +24,10 @@ const Notices = () => {
   // Add Notice
   const addNotice = () => {
     if (!newNotice.trim()) return; // Prevent empty notices
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     axios
-      .post("/api/admin/notices", { text: newNotice.trim() })
+      .post(`${apiUrl}/admin/notices`, { text: newNotice.trim() })
       .then((res) => {
         toast.success("Added new Notice successfully!");
         setNotices([res.data.notice, ...notices]); // Add new notice at the top
@@ -36,8 +38,9 @@ const Notices = () => {
 
   // Delete Notice
   const deleteNotice = (id) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     axios
-      .delete(`/api/admin/notices/${id}`)
+      .delete(`${apiUrl}/admin/notices/${id}`)
       .then(() => setNotices(notices.filter((notice) => notice._id !== id)))
       .catch((err) => console.error("Error deleting notice:", err));
   };
@@ -51,9 +54,9 @@ const Notices = () => {
   // Update Notice
   const updateNotice = (id) => {
     if (!editText.trim()) return;
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     axios
-      .put(`/api/admin/notices/${id}`, { text: editText.trim() })
+      .put(`${apiUrl}/admin/notices/${id}`, { text: editText.trim() })
       .then((res) => {
         setNotices(notices.map((n) => (n._id === id ? res.data.notice : n)));
         setEditingNotice(null); // Reset edit mode

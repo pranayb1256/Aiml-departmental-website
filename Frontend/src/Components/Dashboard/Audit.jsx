@@ -7,12 +7,13 @@ const AuditLogs = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        const apiUrl = import.meta.env.VITE_API_URL;
         const fetchLogs = async () => {
             setLoading(true);
             setError(null);
 
             try {
-                const response = await axios.get("/api/audit");
+                const response = await axios.get(`${apiUrl}/audit`);
                 console.log("✅ API Response:", response.data);
                 setLogs(response.data);
             } catch (err) {

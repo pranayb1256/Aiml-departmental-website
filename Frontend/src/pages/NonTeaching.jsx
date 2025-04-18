@@ -25,7 +25,8 @@ export default function NonTeachingPage() {
     const [facultyData, setFacultyData] = useState([]);
 
     useEffect(() => {
-        fetch("/api/nonfaculty") // Ensure correct backend URL
+    const apiUrl = import.meta.env.VITE_API_URL;
+        fetch(`${apiUrl}/nonfaculty`) // Ensure correct backend URL
             .then((res) => res.json())
             .then((data) => setFacultyData(data))
             .catch((err) => console.error("Error fetching non-faculty:", err));

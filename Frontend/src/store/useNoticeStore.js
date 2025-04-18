@@ -5,8 +5,9 @@ const useNoticeStore = create((set) => ({
 
   // Fetch notices from the backend
   fetchNotices: async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     try {
-      const res = await fetch("/api/notices");
+      const res = await fetch(`${apiUrl}/notices`);
       const data = await res.json();
       set({ notices: data });
     } catch (error) {
@@ -17,7 +18,9 @@ const useNoticeStore = create((set) => ({
   // Add a new notice
   addNotice: async (notice) => {
     try {
-      const res = await fetch("/api/notices", {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+      const res = await fetch(`${apiUrl}/notices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(notice),
@@ -32,7 +35,8 @@ const useNoticeStore = create((set) => ({
   // Delete a notice
   deleteNotice: async (id) => {
     try {
-      await fetch(`/api/notices/${id}`, { method: "DELETE" });
+    const apiUrl = import.meta.env.VITE_API_URL;
+      await fetch(`${apiUrl}/notices/${id}`, { method: "DELETE" });
       set((state) => ({ notices: state.notices.filter((notice) => notice._id !== id) }));
     } catch (error) {
       console.error("Error deleting notice:", error);

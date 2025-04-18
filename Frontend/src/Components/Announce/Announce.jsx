@@ -7,8 +7,8 @@ export default function Announce() {
 
     useEffect(() => {
         const socket = io("https://aiml-departmental-website-n.onrender.com");
-
-        fetch("/api/admin/announcements")
+        const apiUrl = import.meta.env.VITE_API_URL;
+        fetch(`${apiUrl}/admin/announcements`)
             .then((res) => res.json())
             .then((data) => {
                 console.log("Fetched data:", data); // Debugging

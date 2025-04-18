@@ -10,7 +10,8 @@ const useGalleryStore = create((set) => ({
     const abortController = new AbortController(); // Abort controller for cleanup
 
     try {
-      const response = await axios.get("/api/homepage/get-images", {
+    const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.get(`${apiUrl}/homepage/get-images`, {
         signal: abortController.signal,
       });
 

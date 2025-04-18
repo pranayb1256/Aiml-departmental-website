@@ -33,7 +33,8 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const endpoint = isRegister ? "/api/admin/register" : "/api/admin/login";
+    const apiUrl = import.meta.env.VITE_API_URL;
+      const endpoint = isRegister ? `${apiUrl}/admin/register` : `${apiUrl}/admin/login`;
       const res = await axios.post(endpoint, credentials);
 
       if (res.data.success) {

@@ -26,7 +26,8 @@ export default function TeachingPage() {
   const [facultyData, setFacultyData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/faculty") // Ensure correct backend URL
+    const apiUrl = import.meta.env.VITE_API_URL;
+    fetch(`${apiUrl}/faculty`) // Ensure correct backend URL
       .then((res) => res.json())
       .then((data) => setFacultyData(data))
       .catch((err) => console.error("Error fetching faculty:", err));

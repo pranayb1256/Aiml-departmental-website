@@ -1,49 +1,71 @@
 import { useState, useEffect, useCallback, Suspense, lazy } from "react";
-import { 
-  Container, Tabs, Tab, Box, Typography, Button, CircularProgress, useTheme 
+import {
+  Container,
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 // Lazy-loaded components (Performance Optimization)
-const Announcements = lazy(() => import("../Components/Dashboard/Announcements"));
+const Announcements = lazy(() =>
+  import("../Components/Dashboard/Announcements")
+);
 const Notices = lazy(() => import("../Components/Dashboard/Notices"));
 const ClubEvents = lazy(() => import("../Components/Dashboard/ClubEvents"));
 const Member = lazy(() => import("../Components/Dashboard/Member"));
 const AuditLogs = lazy(() => import("../Components/Dashboard/Audit"));
-const TimetableManager = lazy(() => import("../Components/Dashboard/Timetable"));
-const PlacedStudent = lazy(() => import("../Components/Dashboard/PlacedStudent"));
+const TimetableManager = lazy(() =>
+  import("../Components/Dashboard/Timetable")
+);
+const PlacedStudent = lazy(() =>
+  import("../Components/Dashboard/PlacedStudent")
+);
 const Result = lazy(() => import("../Components/Dashboard/Result"));
-const Analytics=lazy(() => import("../Components/Dashboard/Analytics"));
+const Analytics = lazy(() => import("../Components/Dashboard/Analytics"));
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
   // State Management
-  const [tabIndex, setTabIndex] = useState(Number(localStorage.getItem("tabIndex")) || 0);
+  const [tabIndex, setTabIndex] = useState(
+    Number(localStorage.getItem("tabIndex")) || 0
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [role, setRole] = useState(null);
-  
-  
+
   // Logout Handler (Optimized with useCallback)
   const handleLogout = useCallback(async () => {
     setLoading(true);
     try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found. Already logged out.");
 
-      await axios.post("/api/admin/logout", {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(
+        `${apiUrl}/admin/logout`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       localStorage.removeItem("token"); // Clear token
       setRole(null); // Clear role state
       toast.success("Logged out successfully!");
       navigate("/login"); // Redirect to login page
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to log out. Please try again.");
+      setError(
+        err.response?.data?.message || "Failed to log out. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -56,13 +78,17 @@ const AdminDashboard = () => {
         <Typography variant="h4" sx={{ fontWeight: "bold" }}>
           Welcome, Admin!
         </Typography>
-        <Button 
-          variant="contained" 
-          color="error" 
-          onClick={handleLogout} 
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleLogout}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={20} sx={{ color: "white" }} /> : "Logout"}
+          {loading ? (
+            <CircularProgress size={20} sx={{ color: "white" }} />
+          ) : (
+            "Logout"
+          )}
         </Button>
       </Box>
 
@@ -75,7 +101,8 @@ const AdminDashboard = () => {
 
       {/* Dashboard Description */}
       <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 3 }}>
-        Manage announcements, notices, club events, placed student and audit logs
+        Manage announcements, notices, club events, placed student and audit
+        logs
       </Typography>
 
       {/* Tabs Navigation */}
@@ -98,7 +125,9 @@ const AdminDashboard = () => {
 
       {/* Content Based on Tab Selection */}
       <Box sx={{ mt: 3, p: 2 }}>
-        <Suspense fallback={<CircularProgress sx={{ display: "block", mx: "auto" }} />}>
+        <Suspense
+          fallback={<CircularProgress sx={{ display: "block", mx: "auto" }} />}
+        >
           {tabIndex === 0 && <Announcements />}
           {tabIndex === 1 && <Notices />}
           {tabIndex === 2 && <ClubEvents />}
@@ -108,7 +137,6 @@ const AdminDashboard = () => {
           {tabIndex === 6 && <PlacedStudent />}
           {tabIndex === 7 && <Result />}
           {tabIndex === 8 && <Analytics />}
-
         </Suspense>
       </Box>
     </Container>
