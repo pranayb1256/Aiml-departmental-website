@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -165,6 +166,10 @@ export default function Header() {
                   Contact Us
                 </NavLink>
               </li>
+              <NavLink
+              className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0" to="/login">
+                Login
+              </NavLink>
             </ul>
           </div>
         </div>
