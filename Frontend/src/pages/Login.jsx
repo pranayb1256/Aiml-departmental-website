@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import toast from "react-hot-toast";
 
-const Auth = () => {
+const Login = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [credentials, setCredentials] = useState({
     fullname: "",
@@ -145,4 +145,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;
