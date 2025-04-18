@@ -72,13 +72,11 @@ app.use("/api/result", resultRoutes)
 app.use("/api/analysis",analysisRoutes )
 
 // Serve static files from React build
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-
-// Catch-all for non-API routes to serve frontend
+app.use(express.static(path.join(__dirname, "../../Frontend/dist")));
 app.get("*", (req, res, next) => {
   if (req.originalUrl.startsWith("/api")) return next();
 
-  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../../Frontend/dist/index.html"));
 });
 
 // WebSocket Logic 
