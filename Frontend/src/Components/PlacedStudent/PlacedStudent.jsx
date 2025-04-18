@@ -8,6 +8,7 @@ const PlacedStudents = () => {
   useEffect(() => {
     axios
       .get(`${apiUrl}/placed-student`)
+      .then((response) => response.json())
       .then((response) => setStudents(response.data))
       .catch((error) => console.error("Error fetching students:", error));
   }, []);
