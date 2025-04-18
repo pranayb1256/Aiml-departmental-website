@@ -15,7 +15,11 @@ import academicsRoutes from "./routes/academics.routes.js"
 import studentRoutes from "./routes/student.routes.js";
 import resultRoutes from "./routes/result.routes.js";
 import analysisRoutes from "./routes/anlyatics.routes.js";
+import { fileURLToPath } from "url";
+import path from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 //module imports for real-time updates
 
 import { createServer } from "http";
@@ -35,29 +39,6 @@ dotenv.config({
 app.use(
     cors({ origin: process.env.CORS_ORIGIN, credentials: true, })
 );
-
-import path from "path";
-import { fileURLToPath } from "url";
-
-// This is necessary when using ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Serve static frontend files from dist
-app.use(express.static(path.join(__dirname, "../../Frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../Frontend/dist", "index.html"));
-});
-
-// Serve static files from frontend/dist
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Frontend/dist", "index.html"));
-});
-
-
 //parsing form-data ,json ,urlencodeded ...
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -89,6 +70,17 @@ app.use("/api/placed-student", studentRoutes)
 app.use("/api/result", resultRoutes)
 //Analytics placed
 app.use("/api/analysis",analysisRoutes )
+
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
+
+// Catch-all for non-API routes to serve frontend
+app.get("*", (req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) return next();
+
+  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+});
+
 // WebSocket Logic 
 let connectionCount = 0; // Counter for total connections
 io.on("connection", (socket) => {
@@ -101,14 +93,6 @@ io.on("connection", (socket) => {
 });
 // Attach `io` to `app` so it can be accessed in controllers
 app.set("io", io);
-// Add this after all API routes
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-});
-
-//connection 
 connectDB()
     .then(() => {
         server.listen(process.env.PORT || 9000, () => {

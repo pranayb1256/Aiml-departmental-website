@@ -30,7 +30,7 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-const API_URL = import.meta.env.VITE_API_URL;
+
 const clubOptions = ["AIMSA", "CSI", "ISTCE"];
 const convertToIST = (date) =>
   dayjs.utc(date).tz("Asia/Kolkata").format("DD/MM/YYYY hh:mm A");
@@ -52,9 +52,10 @@ const ClubEvents = () => {
   }, []);
 
   const fetchEvents = async () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     setLoading(true);
     try {
-      const res = await axios.get(API_URL);
+      const res = await axios.get(`${API_URL}/events`);
       setEvents(res.data.events || []);
     } catch (err) {
       toast.error("Failed to fetch events.");
@@ -65,9 +66,10 @@ const ClubEvents = () => {
 
   const handleDelete = async (eventId) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
+    const API_URL = import.meta.env.VITE_API_URL;
 
     try {
-      await axios.delete(`${API_URL}${eventId}`);
+      await axios.delete(`${API_URL}/${eventId}`);
       toast.success("Event deleted successfully!");
       setEvents((prevEvents) =>
         prevEvents.filter((event) => event._id !== eventId)
@@ -129,6 +131,7 @@ const ClubEvents = () => {
       newEvent.imageFiles.forEach((file) => {
         formData.append("images", file);
       });
+      const API_URL = import.meta.env.VITE_API_URL;
 
       const response = await axios.post(API_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
