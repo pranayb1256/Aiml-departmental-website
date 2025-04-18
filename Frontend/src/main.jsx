@@ -35,7 +35,7 @@ const router = createBrowserRouter(
       <Route path="/Academics" element={<Academics/>} /> 
       <Route path="/Placements" element={<Placements/>} /> 
       <Route path="/Club" element={<TeamMember/>} /> 
-      <Route path="login" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="dashboard" element={<PrivateRoute element={<Dashboard />} />} />
       {/* <Route path="login" element={<Login />} /> */}
       {/* <Route path="admin" element={<PrivateRoute element={<AdminDashboard />} />} /> */}
