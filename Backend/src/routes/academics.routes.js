@@ -1,7 +1,7 @@
 import express from "express";
 import Timetable from "../models/timetable.models.js";
 import { uploadAcademicCalendar, getAcademicCalendars, deleteAcademicCalendar } from "../controllers/acdemics.controller.js"
-import { uploadCalendar } from "../middleware/uploadFolder.middleware.js";
+import { upload } from "../middleware/uploadFolder.middleware.js";
 const router = express.Router();
 
 router.get("/timetable", async (req, res) => {
@@ -33,7 +33,7 @@ router.post("/timetable", async (req, res) => {
         res.status(500).json({ message: "Failed to create timetable", error });
     }
 });
-router.post("/calender", uploadCalendar.single("calendar"), uploadAcademicCalendar);
+router.post("/calender", upload.single("calendar"), uploadAcademicCalendar);
 router.get("/calender", getAcademicCalendars);
 router.delete("/calender:id", deleteAcademicCalendar);
 

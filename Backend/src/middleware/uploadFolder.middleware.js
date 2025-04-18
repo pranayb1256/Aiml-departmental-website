@@ -1,27 +1,22 @@
 // middleware/uploadPdf.js
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
+import path from "path";
 
-// Cloudinary config (already setup)
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: (req, file) => {
-    return {
-      folder: "academic_calendars",
-      resource_type: "raw", // important for non-images
-      public_id: `${req.body.yearLevel}_${Date.now()}`,
-      format: "pdf",
-    };
-  },
+// Local storage temporarily (files go to Cloudinary later)
+const storage = multer.diskStorage({
+  destination: "temp_uploads/",
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
+  const ext = path.extname(file.originalname);
+  if (file.mimetype === "application/pdf" && ext === ".pdf") {
     cb(null, true);
   } else {
-    cb(new Error("Only PDF files allowed!"), false);
+    cb(new Error("Only PDF files are allowed!"));
   }
 };
 
-export const uploadCalendar = multer({ storage, fileFilter });
+export const upload = multer({ storage, fileFilter });
