@@ -17,7 +17,7 @@ import "swiper/css/pagination";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:8001"; // Update as needed
+const SOCKET_URL = "https://aiml-departmental-website-n.onrender.com"; // Update as needed
 
 const Event = () => {
   const [selectedClub, setSelectedClub] = useState("AIMSA");

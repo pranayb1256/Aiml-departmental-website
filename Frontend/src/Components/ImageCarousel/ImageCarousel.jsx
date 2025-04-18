@@ -18,7 +18,7 @@ const ImageCarousel = () => {
 
     const fetchEventImages = async () => {
       try {
-        const response = await axios.get("http://localhost:8001/api/homepage/get-images");
+        const response = await axios.get("api/homepage/get-images");
 
         if (isMounted) {
           console.log("API Response:", response.data);

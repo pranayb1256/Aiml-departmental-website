@@ -12,7 +12,7 @@ const AuditLogs = () => {
             setError(null);
 
             try {
-                const response = await axios.get("http://localhost:8001/api/audit");
+                const response = await axios.get("api/audit");
                 console.log("✅ API Response:", response.data);
                 setLogs(response.data);
             } catch (err) {

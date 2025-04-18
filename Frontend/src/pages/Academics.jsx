@@ -41,7 +41,7 @@ const Academics = () => {
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:8001/api/result`);
+      const { data } = await axios.get(`api/result`);
       setResults(data);
     } catch (error) {
       message.error("Failed to fetch academic results");
@@ -51,7 +51,7 @@ const Academics = () => {
 
   const fetchAllTimetables = async () => {
     try {
-      const response = await axios.get("http://localhost:8001/api/academics/timetable");
+      const response = await axios.get("api/academics/timetable");
       const formattedTimetables = {};
 
       response.data.timetables.forEach(({ year, semester, urlA, urlB }) => {
