@@ -33,7 +33,7 @@ const Event = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
       try {
         
-        const response = await axios.get(`${apiUrl}/events/`);
+        const response = await axios.get(`${apiUrl}/events`);
         setEvents(response.data.events || []);
       } catch (error) {
         console.error("Error fetching events:", error);

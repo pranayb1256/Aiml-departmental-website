@@ -33,8 +33,20 @@ const Auth = () => {
 
     setLoading(true);
     try {
-    const apiUrl = import.meta.env.VITE_API_URL;
+      // Get the backend URL from the environment variable
+      const apiUrl = import.meta.env.VITE_API_URL;
+      console.log("API URL: ", apiUrl);  // Log the API URL to check if it's loaded correctly
+
+      // Ensure that the API URL is defined and not undefined
+      if (!apiUrl) {
+        setError("API URL is not defined. Please check the environment variable.");
+        setLoading(false);
+        return;
+      }
+
       const endpoint = isRegister ? `${apiUrl}/admin/register` : `${apiUrl}/admin/login`;
+
+      // Call the backend endpoint
       const res = await axios.post(endpoint, credentials);
 
       if (res.data.success) {
@@ -42,7 +54,7 @@ const Auth = () => {
           setIsRegister(false); // Switch to login after successful registration
         } else {
           localStorage.setItem("token", res.data.token);
-          toast.success("Admin logged in successfully!")
+          toast.success("Admin logged in successfully!");
           navigate("/dashboard");
         }
       } else {
@@ -96,7 +108,7 @@ const Auth = () => {
               label="Admin ID"
               fullWidth
               margin="normal"
-              value={credentials.adminid}
+              value={credentials.adminId}
               onChange={(e) => setCredentials({ ...credentials, adminId: e.target.value })}
             />
             {error && (

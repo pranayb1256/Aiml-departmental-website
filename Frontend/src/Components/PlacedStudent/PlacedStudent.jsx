@@ -5,12 +5,25 @@ import axios from "axios";
 const PlacedStudents = () => {
   const [students, setStudents] = useState([]);
   const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
+    // Fetching students from the backend
     axios
       .get(`${apiUrl}/placed-student`)
-      .then((response) => setStudents(response.data))
-      .catch((error) => console.error("Error fetching students:", error));
-  }, []);
+      .then((response) => {
+        console.log(response.data); // Log to check the data structure
+        // Check if the response is an array before setting the students state
+        if (Array.isArray(response.data)) {
+          setStudents(response.data);
+        } else {
+          console.error("Invalid data format:", response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching students:", error);
+        setStudents([]); // Optionally set students to an empty array if error occurs
+      });
+  }, [apiUrl]);
 
   return (
     <section className="relative p-10 bg-gradient-to-b from-white to-blue-50 text-center">
@@ -28,7 +41,10 @@ const PlacedStudents = () => {
 
       {/* Student Cards */}
       <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {students.length > 0 ? (
+        {!students.length ? (
+          // Loading or error state
+          <p className="relative text-gray-500 text-lg">Loading students...</p>
+        ) : (
           students.map((student, index) => (
             <motion.div
               key={index}
@@ -46,8 +62,6 @@ const PlacedStudents = () => {
               <p className="text-lg text-gray-600">{student.company}</p>
             </motion.div>
           ))
-        ) : (
-          <p className="relative text-gray-500 text-lg">No students placed yet.</p>
         )}
       </div>
     </section>
