@@ -15,6 +15,7 @@ import academicsRoutes from "./routes/academics.routes.js"
 import studentRoutes from "./routes/student.routes.js";
 import resultRoutes from "./routes/result.routes.js";
 import analysisRoutes from "./routes/anlyatics.routes.js";
+
 //module imports for real-time updates
 
 import { createServer } from "http";
@@ -34,6 +35,9 @@ dotenv.config({
 app.use(
     cors({ origin: process.env.CORS_ORIGIN, credentials: true, })
 );
+
+import path from "path";
+const __dirname = path.resolve();
 
 
 
@@ -80,7 +84,12 @@ io.on("connection", (socket) => {
 });
 // Attach `io` to `app` so it can be accessed in controllers
 app.set("io", io);
+// Add this after all API routes
+app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 //connection 
 connectDB()

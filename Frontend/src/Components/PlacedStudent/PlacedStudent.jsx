@@ -7,22 +7,23 @@ const PlacedStudents = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    // Fetching students from the backend
-    axios
-      .get(`${apiUrl}/placed-student`)
-      .then((response) => {
-        console.log(response.data); // Log to check the data structure
-        // Check if the response is an array before setting the students state
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/placed-student`);
+        console.log(response.data); // Check what data you get
+
         if (Array.isArray(response.data)) {
           setStudents(response.data);
         } else {
           console.error("Invalid data format:", response.data);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching students:", error);
-        setStudents([]); // Optionally set students to an empty array if error occurs
-      });
+        setStudents([]);
+      }
+    };
+
+    fetchStudents();
   }, [apiUrl]);
 
   return (
@@ -42,7 +43,6 @@ const PlacedStudents = () => {
       {/* Student Cards */}
       <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {!students.length ? (
-          // Loading or error state
           <p className="relative text-gray-500 text-lg">Loading students...</p>
         ) : (
           students.map((student, index) => (
