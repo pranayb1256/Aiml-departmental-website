@@ -9,7 +9,7 @@ export default function Notice() {
     const socket = io("https://aiml-departmental-website-n.onrender.com");
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    fetch(`${apiUrl}/api/admin/notices`)
+    fetch(`${apiUrl}/admin/notices`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched data:", data); // Debugging
