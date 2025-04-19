@@ -6,7 +6,7 @@ export default function HodDesk() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-white p-6">
       {/* HOD Photo */}
       <motion.img
-        src="../../public/Photos/HOD.jpg"
+        src="https://res.cloudinary.com/dzydycrjo/image/upload/v1745039183/ys2jmhw2owz96ni48i3j.jpg"
         alt="HOD"
         className="w-48 h-48 rounded-full border-4 border-gray-300 shadow-xl hover:shadow-2xl transition-shadow duration-300"
         initial={{ scale: 0.8, opacity: 0 }}

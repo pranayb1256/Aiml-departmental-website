@@ -15,7 +15,7 @@ const ImageCarousel = () => {
 
   useEffect(() => {
     let isMounted = true; // Prevent setting state on unmounted component
-    const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = ;
 
     const fetchEventImages = async () => {
       try {
