@@ -191,6 +191,7 @@ const PlacedStudent = () => {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <p className="text-gray-500">No placed students found.</p>
       )}
