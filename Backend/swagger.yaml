@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: AI & ML Department API
+  description: API documentation for the AI & ML Department Website
+  version: 1.0.0
+servers:
+  - url: http://localhost:8003/api
+    description: Local server
+  - url: https://your-backend.onrender.com/api
+    description: Production server
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    example: "2026-08-04T12:00:00Z"
+  /alumini/:
+    get:
+      summary: Get all alumni
+      description: Retrieve a list of all alumni
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    name:
+                      type: string
+                    jobTitle:
+                      type: string
+                    photo:
+                      type: string
+  /faculty:
+    get:
+      summary: Get all faculty members
+      description: Retrieve a list of all teaching faculty
+      responses:
+        '200':
+          description: Successful response
+  /admin/login:
+    post:
+      summary: Admin login
+      description: Authenticate an admin user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login

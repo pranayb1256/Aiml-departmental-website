@@ -62,6 +62,14 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static("public"));
 app.use(cookieParser()); // middleware to parse cookies
 
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
+
+// Load swagger file
+const swaggerDocument = YAML.load(path.join(__dirname, "../swagger.yaml"));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Health check endpoint (used by Render to verify service is alive)
 app.get("/api/health", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
@@ -114,12 +122,17 @@ io.on("connection", (socket) => {
 });
 // Attach `io` to `app` so it can be accessed in controllers
 app.set("io", io);
-connectDB()
-    .then(() => {
-        server.listen(process.env.PORT || 9000, "0.0.0.0", () => {
-            console.log(`Server is running at Port: ${process.env.PORT || 9000}`);
+
+if (process.env.NODE_ENV !== 'test') {
+    connectDB()
+        .then(() => {
+            server.listen(process.env.PORT || 9000, "0.0.0.0", () => {
+                console.log(`Server is running at Port: ${process.env.PORT || 9000}`);
+            });
+        })
+        .catch((err) => {
+            console.log("MongoDB connection Failed!!! ", err);
         });
-    })
-    .catch((err) => {
-        console.log("MongoDB connection Failed!!! ", err);
-    });
+}
+
+export { app };
