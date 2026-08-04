@@ -1,6 +1,12 @@
+import dotenv from "dotenv";
+// Load env vars FIRST — before any process.env usage
+dotenv.config({
+    path: "./.env",
+    override: true
+});
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import cookieParser from "cookie-parser"
 import homepageRoutes from "./routes/homepage.routes.js"
@@ -25,23 +31,28 @@ const __dirname = path.dirname(__filename);
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+// Build allowed origins list from environment
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    process.env.CORS_ORIGIN,
+    "http://localhost:5173",
+    "http://localhost:5174"
+].filter(Boolean); // Remove undefined/null entries
+
 const app = express();
 const server = createServer(app); // 'createServer(app):'Converts Express app into an HTTP server.Required because Socket.io needs an HTTP server to work.
 const io = new Server(server, {
     cors: {
-        origin: [process.env.CORS_ORIGIN, "http://localhost:5173", "http://localhost:5174"],
+        origin: allowedOrigins,
         credentials: true
     },
 });
 
 
 //configs
-dotenv.config({
-    path: "./.env",
-})
 app.use(
     cors({
-        origin: [process.env.CORS_ORIGIN, "http://localhost:5173", "http://localhost:5174"],
+        origin: allowedOrigins,
         credentials: true
     })
 );
@@ -51,6 +62,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.static("public"));
 app.use(cookieParser()); // middleware to parse cookies
 
+// Health check endpoint (used by Render to verify service is alive)
+app.get("/api/health", (req, res) => {
+    res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
 //hompage routes 
 app.use("/api/homepage", homepageRoutes);
@@ -77,10 +92,15 @@ app.use("/api/result", resultRoutes)
 //Analytics placed
 app.use("/api/analysis", analysisRoutes)
 
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-
-// Catch-all for non-API routes to serve frontend
+// Global error handler — catches unhandled errors and returns JSON instead of crashing
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err.message);
+    const statusCode = err.statusCode || err.code || 500;
+    res.status(typeof statusCode === "number" && statusCode >= 100 && statusCode < 600 ? statusCode : 500).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+    });
+});
 
 // WebSocket Logic 
 let connectionCount = 0; // Counter for total connections
@@ -96,8 +116,8 @@ io.on("connection", (socket) => {
 app.set("io", io);
 connectDB()
     .then(() => {
-        server.listen(process.env.PORT || 9000, () => {
-            console.log(`Server is running at Port: http://localhost:${process.env.PORT}`);
+        server.listen(process.env.PORT || 9000, "0.0.0.0", () => {
+            console.log(`Server is running at Port: ${process.env.PORT || 9000}`);
         });
     })
     .catch((err) => {

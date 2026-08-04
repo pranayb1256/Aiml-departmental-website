@@ -1,9 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import dotenv from "dotenv";
 
-// Load environment variables from .env file
-dotenv.config();
 
 // Configuration - Securely read credentials from .env
 cloudinary.config({
