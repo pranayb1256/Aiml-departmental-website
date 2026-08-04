@@ -255,14 +255,15 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ## 👨‍💻 Author
 
 **Pranay Bhoir**
+**Hrishikesh Dongare**
 
 [![GitHub](https://img.shields.io/badge/GitHub-pranayb1256-181717?style=flat-square&logo=github)](https://github.com/pranayb1256)
 
----
+[![GitHub](https://img.shields.io/badge/GitHub-HrishikeshDongare-181717?style=flat-square&logo=github)](https://github.com/Hrishi-Code-tech)
 
-<p align="center">
-  Made with ❤️ for the AIML Department
-</p>
+---
+[![Linkden](https://www.linkedin.com/in/pranay-bhoir-3a989b284/)]
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" alt="Status"/>
