@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateToken } from "../middleware/auth.middleware.js";
+import { authenticateToken, requireSuperadmin } from "../middleware/auth.middleware.js";
 import { checkSpecialId } from "../middleware/verifyAdmin.middleware.js"
 import {
     registerAdmin,
@@ -11,6 +11,8 @@ import {
     addNotice,
     deleteNotice,
     deleteAnnouncement,
+    updateNotice,
+    updateAnnouncement,
     //faculty
     // getAllFaculty,
     // createFaculty,
@@ -35,12 +37,14 @@ router.post("/logout", authenticateToken, logoutAdmin);
 // Announcements routes 
 router.get("/announcements", getAllAnnouncements);
 router.post("/announcements", authenticateToken, addAnnouncement);
-router.delete("/announcements/:id", authenticateToken,deleteAnnouncement)
+router.put("/announcements/:id", authenticateToken, requireSuperadmin, updateAnnouncement);
+router.delete("/announcements/:id", authenticateToken, requireSuperadmin, deleteAnnouncement)
 
 // Notices routes
 router.get("/notices", getAllNotices);
 router.post("/notices", authenticateToken, addNotice);
-router.delete("/notices/:id", authenticateToken,deleteNotice)
+router.put("/notices/:id", authenticateToken, requireSuperadmin, updateNotice);
+router.delete("/notices/:id", authenticateToken, requireSuperadmin, deleteNotice)
 
 
 //faculty routes (on hold )

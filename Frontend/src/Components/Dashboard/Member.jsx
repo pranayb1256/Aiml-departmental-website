@@ -150,8 +150,8 @@ const Member = () => {
       </form>
 
       {/* Members Table */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <table className="w-full border-collapse border text-left">
+      <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+        <table className="w-full border-collapse border text-left min-w-[600px]">
           <thead>
             <tr className="bg-gray-200">
               <th className="border p-2">Photo</th>

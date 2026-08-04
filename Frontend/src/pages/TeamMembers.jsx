@@ -80,7 +80,8 @@ const ClubMemberPage = () => {
   }, {});
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="bg-slate-50 min-h-screen font-sans py-12 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
       {/* Club Banner */}
       <div className="relative w-full h-72 md:h-96 rounded-xl overflow-hidden shadow-2xl">
         <img
@@ -217,6 +218,7 @@ const ClubMemberPage = () => {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 };

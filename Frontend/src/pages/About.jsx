@@ -84,8 +84,8 @@ export default function About() {
       {/* Labs Section */}
       <div className="container mx-auto px-6 py-12">
         <h2 className="text-3xl font-semibold text-center mb-6">Department Labs</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg">
+        <div className="overflow-x-auto w-full rounded-lg shadow-lg">
+          <table className="min-w-[800px] w-full bg-white border border-gray-300 rounded-lg">
             <thead>
               <tr className="bg-blue-500 text-white">
                 <th className="border px-6 py-3">S.No</th>

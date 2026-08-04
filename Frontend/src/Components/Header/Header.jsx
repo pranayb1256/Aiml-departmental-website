@@ -1,179 +1,195 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import CommandPalette from "./CommandPalette";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [facultyOpen, setFacultyOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isCmdOpen, setIsCmdOpen] = useState(false);
+  const location = useLocation();
 
-  // Detect screen size changes to toggle dropdown behavior
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
     };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  let hoverTimeout;
-  const handleMouseEnter = () => {
-    clearTimeout(hoverTimeout); // Prevent hiding if quickly re-hovered
-    setFacultyOpen(true);
-  };
-  const handleMouseLeave = () => {
-    hoverTimeout = setTimeout(() => {
-      setFacultyOpen(false);
-    }, 300); // Keep dropdown visible for 300ms after hover-out
-  };
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+    setFacultyOpen(false);
+  }, [location.pathname]);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Clubs", path: "/Club" },
+    { name: "Events", path: "/Event" },
+    { name: "Showcase", path: "/Showcase" },
+    { name: "Resources", path: "/Resources" },
+    { name: "Verify", path: "/verify-certificate" },
+    { name: "Academics", path: "/Academics" },
+    { name: "Placements", path: "/Placements" },
+  ];
+
   return (
-    <header className="sticky z-50 top-0">
-      <nav className="px-4 lg:px-6 py-2.5">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 py-2" : "bg-white border-b border-gray-100 py-4"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center gap-3">
             <img
               src="https://res.cloudinary.com/dzydycrjo/image/upload/v1745004394/cvnwsfj2a6bwqvupvky8.jpg"
-              className="mr-3 h-12"
-              alt="Logo"
+              className="h-10 md:h-12 w-auto object-contain"
+              alt="LTCE Logo"
             />
           </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden text-gray-700"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            ☰
-          </button>
-
-          {/* Navigation Links */}
-          <div
-            className={`${
-              menuOpen ? "block" : "hidden"
-            } lg:flex lg:w-auto lg:order-1`}
-          >
-            <ul className="flex flex-col lg:flex-row lg:space-x-8 mt-4 lg:mt-0 font-medium">
-              <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 ${
-                      isActive ? "text-black-700" : "text-gray-700"
-                    } border-b lg:border-0 hover:text-blue-700 lg:p-0`
-                  }
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/about"
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 ${
-                      isActive ? "text-black-700" : "text-gray-700"
-                    } border-b lg:border-0 hover:text-blue-700 lg:p-0`
-                  }
-                >
-                  About
-                </NavLink>
-              </li>
-
-              {/* Faculty Dropdown */}
-              <li
-                className={`relative ${isMobile ? "" : "group"}`}
-                onMouseEnter={!isMobile ? handleMouseEnter : undefined}
-                onMouseLeave={!isMobile ? handleMouseLeave : undefined}
-                onClick={() => isMobile && setFacultyOpen(!facultyOpen)}
-              >
-                <button className="block w-full text-left py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 lg:p-0 lg:hover:text-blue-700">
-                  Faculty {isMobile ? (facultyOpen ? "▲" : "▼") : "▼"}
-                </button>
-                <ul
-                  className={`lg:absolute left-0 mt-2 w-48 bg-white shadow-md 
-                transition-opacity duration-300 ease-in-out transform 
-                ${
-                  facultyOpen
-                    ? "opacity-100 visible scale-100"
-                    : "opacity-0 invisible scale-95"
-                } 
-                ${isMobile ? (facultyOpen ? "block" : "hidden") : ""}`}
-                >
-                  <li>
-                    <NavLink
-                      to="/HodDesk"
-                      className="block py-2 pr-4 pl-3 hover:bg-gray-50"
-                    >
-                      HOD Desk
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/Teaching"
-                      className="block py-2 pr-4 pl-3 hover:bg-gray-50"
-                    >
-                      Teaching Staff
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/NonTeaching"
-                      className="block py-2 pr-4 pl-3 hover:bg-gray-50"
-                    >
-                      Non-Teaching Staff
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-
-              <li>
-                <NavLink
-                  to="/Club"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0"
-                >
-                  Clubs
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/Event"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0"
-                >
-                  Events
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/Academics"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0"
-                >
-                  Academics
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/Placements"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0"
-                >
-                  Placements & Career Opportunities
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/Contact"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0"
-                >
-                  Contact Us
-                </NavLink>
-              </li>
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-2">
+            {navLinks.map((link) => (
               <NavLink
-              className="block py-2 pr-4 pl-3 text-gray-700 border-b lg:border-0 hover:text-blue-700 lg:p-0" to="/login">
-                Login
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) =>
+                  `relative px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-blue-600"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/50"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {link.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="header-active-tab-light"
+                        className="absolute bottom-0 left-3 right-3 h-0.5 bg-blue-600 rounded-t-full"
+                      />
+                    )}
+                  </>
+                )}
               </NavLink>
-            </ul>
+            ))}
+
+            {/* Faculty Dropdown (Desktop) */}
+            <div
+              className="relative group px-3 py-2"
+              onMouseEnter={() => setFacultyOpen(true)}
+              onMouseLeave={() => setFacultyOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                Faculty
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${facultyOpen ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence>
+                {facultyOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden py-2"
+                  >
+                    <Link to="/HodDesk" className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">
+                      HOD Desk
+                    </Link>
+                    <Link to="/Teaching" className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">
+                      Teaching Staff
+                    </Link>
+                    <Link to="/NonTeaching" className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors">
+                      Non-Teaching Staff
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </nav>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCmdOpen(true)}
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-700 transition-all"
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-sm">Search...</span>
+              <kbd className="px-1.5 border border-gray-300 rounded text-[10px] font-mono text-gray-500 bg-white">
+                ⌘K
+              </kbd>
+            </button>
+
+            <Link
+              to="/Contact"
+              className="hidden lg:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all"
+            >
+              Contact Us
+            </Link>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="lg:hidden p-2 text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
-      </nav>
-    </header>
+      </header>
+
+      {/* Mobile Navigation Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "100vh" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="fixed inset-0 z-40 bg-white lg:hidden pt-24 pb-8 px-6 overflow-y-auto"
+          >
+            <nav className="flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `text-2xl font-semibold transition-colors ${
+                      isActive ? "text-blue-600" : "text-gray-800 hover:text-blue-600"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+              <div className="h-px bg-gray-100 my-4" />
+              <div className="flex flex-col gap-4">
+                <span className="text-sm font-medium text-gray-400 uppercase tracking-widest">Faculty</span>
+                <Link to="/HodDesk" className="text-xl font-medium text-gray-800 hover:text-blue-600">HOD Desk</Link>
+                <Link to="/Teaching" className="text-xl font-medium text-gray-800 hover:text-blue-600">Teaching Staff</Link>
+                <Link to="/NonTeaching" className="text-xl font-medium text-gray-800 hover:text-blue-600">Non-Teaching Staff</Link>
+              </div>
+              <div className="h-px bg-gray-100 my-4" />
+              <Link
+                to="/Contact"
+                className="inline-flex items-center justify-center px-6 py-4 text-lg font-bold text-white bg-blue-600 rounded-xl shadow-md"
+              >
+                Contact Us
+              </Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <CommandPalette isOpen={isCmdOpen} setIsOpen={setIsCmdOpen} />
+    </>
   );
 }

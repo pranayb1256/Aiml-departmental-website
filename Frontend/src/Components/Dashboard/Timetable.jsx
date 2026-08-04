@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
 import { MdDelete, MdUploadFile } from "react-icons/md";
+import { Loader2, Calendar, Trash2, UploadCloud, FileText } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -66,6 +58,7 @@ const AcademicCalendarManager = () => {
       if (response.status === 200) {
         fetchAllCalendars();
         alert("Calendar uploaded successfully!");
+        setFile(null); // Reset file input
       } else {
         alert("Upload failed.");
       }
@@ -78,6 +71,8 @@ const AcademicCalendarManager = () => {
   };
 
   const handleDelete = async (selectedYear) => {
+    if (!confirm(`Are you sure you want to delete the calendar for ${selectedYear}?`)) return;
+    
     try {
       setLoading(true);
       await axios.delete(`${API_URL}/${selectedYear}`);
@@ -92,81 +87,128 @@ const AcademicCalendarManager = () => {
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <Typography variant="h4">Academic Calendar Management</Typography>
-
-      <div className="flex gap-6 mb-4 mt-4">
-        <FormControl fullWidth>
-          <InputLabel>Year</InputLabel>
-          <Select value={year} onChange={(e) => setYear(e.target.value)}>
-            {["FE", "SE", "TE", "BE"].map((y) => (
-              <MenuItem key={y} value={y}>
-                {y}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-slate-800">Academic Calendar Management</h2>
       </div>
 
-      <label className="block w-full border-2 border-dashed p-4 text-center cursor-pointer rounded-md">
-        <input
-          type="file"
-          hidden
-          accept="application/pdf"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <MdUploadFile className="text-4xl mx-auto mb-2 text-gray-500" />
-        {file ? file.name : "Click to select a PDF file"}
-      </label>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left Column: Upload & Manage */}
+        <div className="lg:col-span-1 space-y-6">
+          
+          {/* Upload Card */}
+          <div className="bg-white p-5 border border-gray-100 shadow-sm rounded-xl">
+            <h3 className="font-semibold text-slate-700 mb-4 flex items-center gap-2">
+              <UploadCloud className="w-5 h-5 text-slate-400" />
+              Upload Calendar
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Select Academic Year</label>
+                <select 
+                  value={year} 
+                  onChange={(e) => setYear(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white"
+                >
+                  {["FE", "SE", "TE", "BE"].map((y) => (
+                    <option key={y} value={y}>{y} (Year)</option>
+                  ))}
+                </select>
+              </div>
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleUpload}
-        disabled={loading}
-        className="mt-4"
-      >
-        Upload
-      </Button>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">PDF File</label>
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer group">
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="application/pdf"
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                    <MdUploadFile className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors mb-2" />
+                    {file ? (
+                      <p className="text-sm font-medium text-blue-600 truncate w-full max-w-[200px]">{file.name}</p>
+                    ) : (
+                      <>
+                        <p className="text-sm text-slate-500 font-medium">Click to upload</p>
+                        <p className="text-xs text-slate-400 mt-1">PDF (MAX. 10MB)</p>
+                      </>
+                    )}
+                  </div>
+                </label>
+              </div>
 
-      {loading ? (
-        <CircularProgress className="mt-4" />
-      ) : calendarUrl ? (
-        <iframe
-          src={calendarUrl}
-          className="mt-4 w-full h-96"
-          title="Academic Calendar"
-        ></iframe>
-      ) : (
-        <Typography className="mt-4 text-gray-500">
-          No calendar found.
-        </Typography>
-      )}
-
-      <Typography variant="h5" className="mt-6">
-        Previous Calendars
-      </Typography>
-      <div className="mt-2">
-        {allCalendars.length > 0 ? (
-          allCalendars.map((cal, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center bg-gray-100 p-2 rounded-md mb-2"
-            >
-              <span>{`Year ${cal.year}`}</span>
-              <Button
-                variant="contained"
-                color="error"
-                size="small"
-                onClick={() => handleDelete(cal.year)}
+              <button
+                onClick={handleUpload}
+                disabled={loading || !file}
+                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                <MdDelete className="mr-1" /> Delete
-              </Button>
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Upload Calendar"}
+              </button>
             </div>
-          ))
-        ) : (
-          <Typography className="text-gray-500">No calendars found.</Typography>
-        )}
+          </div>
+
+          {/* Manage Calendars Card */}
+          <div className="bg-white p-5 border border-gray-100 shadow-sm rounded-xl">
+            <h3 className="font-semibold text-slate-700 mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-slate-400" />
+              Existing Calendars
+            </h3>
+            
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+              {allCalendars.length > 0 ? (
+                allCalendars.map((cal, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-slate-50 border border-gray-100 rounded-lg group hover:border-blue-200 transition-colors">
+                    <span className="font-medium text-slate-700">Year {cal.year}</span>
+                    <button
+                      onClick={() => handleDelete(cal.year)}
+                      disabled={loading}
+                      className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                      title="Delete Calendar"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-slate-500 text-center py-4">No calendars found.</p>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Right Column: Preview */}
+        <div className="lg:col-span-2">
+          <div className="bg-white p-5 border border-gray-100 shadow-sm rounded-xl h-full flex flex-col min-h-[500px]">
+            <h3 className="font-semibold text-slate-700 mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-slate-400" />
+              Calendar Preview: {year}
+            </h3>
+            
+            <div className="flex-1 bg-slate-100 rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center relative">
+              {loading && !calendarUrl ? (
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin absolute" />
+              ) : calendarUrl ? (
+                <iframe
+                  src={calendarUrl}
+                  className="w-full h-full min-h-[500px]"
+                  title={`Academic Calendar ${year}`}
+                ></iframe>
+              ) : (
+                <div className="text-center text-slate-400">
+                  <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                  <p>No calendar available for {year}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

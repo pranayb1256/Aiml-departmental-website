@@ -1,12 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
+import AIMLLoadingIntro from "./Components/Preloader";
 import "./App.css";
 
 function Layout() {
   const location = useLocation();
   const hideHeaderFooter = location.pathname === "/login" || location.pathname.startsWith("/dashboard");
+  const isHome = location.pathname === "/";
+  const needsPadding = !hideHeaderFooter && !isHome;
+  const [loading, setLoading] = useState(true);
+
+  // Auto-disable loader on login or dashboard pages
+  useEffect(() => {
+    if (hideHeaderFooter) {
+      setLoading(false);
+    }
+  }, [hideHeaderFooter]);
 
   useEffect(() => {
     const loadChatbot = () => {
@@ -53,8 +64,11 @@ function Layout() {
 
   return (
     <>
+      {loading && !hideHeaderFooter && <AIMLLoadingIntro onComplete={() => setLoading(false)} />}
       {!hideHeaderFooter && <Header />}
-      <Outlet />
+      <main className={needsPadding ? "pt-24 lg:pt-28" : ""}>
+        <Outlet />
+      </main>
       {!hideHeaderFooter && <Footer />}
     </>
   );

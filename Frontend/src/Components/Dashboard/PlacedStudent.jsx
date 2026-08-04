@@ -161,7 +161,8 @@ const PlacedStudent = () => {
       {loading ? (
         <p className="text-gray-500">Loading students...</p>
       ) : students.length > 0 ? (
-        <table className="w-full border-collapse border rounded-lg shadow-md">
+        <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+        <table className="w-full border-collapse border rounded-lg shadow-md min-w-[800px]">
           <thead>
             <tr className="bg-blue-500 text-white">
               <th className="border px-4 py-2">Name</th>

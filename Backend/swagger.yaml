@@ -74,3 +74,91 @@ paths:
       responses:
         '200':
           description: Successful login
+  /admin/notices:
+    get:
+      summary: Get all notices
+      description: Retrieve a list of all official notices
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Add a new notice
+      description: Create a new notice (Requires Auth)
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Notice created successfully
+  /admin/announcements:
+    get:
+      summary: Get all announcements
+      description: Retrieve a list of all announcements
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Add a new announcement
+      description: Create a new announcement (Requires Auth)
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Announcement created successfully
+  /events:
+    get:
+      summary: Get all events
+      description: Retrieve a list of all upcoming and past events
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Create a new event
+      description: Add an event with image upload (Requires Auth)
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Event created successfully
+  /resources:
+    get:
+      summary: Get all resources
+      description: Retrieve a list of syllabus, PYQs, and lab manuals
+      responses:
+        '200':
+          description: Successful response
+  /showcase:
+    get:
+      summary: Get innovation showcase
+      description: Retrieve student projects and faculty research papers
+      responses:
+        '200':
+          description: Successful response
+  /events/winners:
+    get:
+      summary: Get past event winners
+      description: Retrieve list of past hackathon and symposium winners
+      responses:
+        '200':
+          description: Successful response
+  /certificate/verify/{id}:
+    get:
+      summary: Verify a certificate
+      description: Check if a certificate ID is valid
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The certificate ID to verify
+      responses:
+        '200':
+          description: Certificate is valid
+        '404':
+          description: Certificate not found
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

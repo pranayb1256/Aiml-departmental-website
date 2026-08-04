@@ -2,19 +2,26 @@ import { ApiError } from "../utils/ApiError.js";
 
 const checkSpecialId = (req, res, next) => {
     try {
-        const  specialId  = req.body.adminId;  // Extract specialId from req.body
-        const ADMIN_SECRET_ID = process.env.ADMIN_SECRET_ID;  // Load from .env    
-        console.log(specialId) 
-        console.log(ADMIN_SECRET_ID) 
+        const specialId = req.body.adminId;  
+        const ADMIN_SECRET_ID = process.env.ADMIN_SECRET_ID;  
+        const FACULTY_SECRET_ID = process.env.FACULTY_SECRET_ID || "FACULTY_KEY_123"; 
 
-        if (!specialId || specialId !== ADMIN_SECRET_ID) {
-            throw new ApiError(400, "Access denied: Invalid admin ID")
+        if (!specialId) {
+            return res.status(400).json({ success: false, message: "Access denied: Missing admin ID" });
         }
 
-        next(); // Allow access if ID matches
+        if (specialId === ADMIN_SECRET_ID) {
+            req.assignedRole = "superadmin";
+        } else if (specialId === FACULTY_SECRET_ID) {
+            req.assignedRole = "faculty";
+        } else {
+            return res.status(400).json({ success: false, message: "Access denied: Invalid admin ID" });
+        }
+
+        next(); 
     } catch (err) {
-        console.log("Invalid SpecialId | error: ", err)
-        throw new ApiError(400, "Invalid Special ID")
+        console.log("Invalid SpecialId | error: ", err);
+        return res.status(400).json({ success: false, message: "Invalid Special ID" });
     }
 };
-export { checkSpecialId }
+export { checkSpecialId };

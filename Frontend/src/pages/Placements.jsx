@@ -2,6 +2,34 @@ import { useState, useEffect } from "react";
 import { Card } from "../Components/ui/card";
 import { FaBrain } from "react-icons/fa";
 import { motion } from "framer-motion";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from "recharts";
+
+const placementTrendData = [
+  { year: "2020", studentsPlaced: 45, highestPackage: 8 },
+  { year: "2021", studentsPlaced: 60, highestPackage: 10 },
+  { year: "2022", studentsPlaced: 85, highestPackage: 14 },
+  { year: "2023", studentsPlaced: 110, highestPackage: 18 },
+];
+
+const domainData = [
+  { name: "Data Science", value: 35 },
+  { name: "Machine Learning", value: 25 },
+  { name: "Full Stack (SDE)", value: 25 },
+  { name: "Cloud/DevOps", value: 15 },
+];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Placements = () => {
   const [placementStats, setPlacementStats] = useState({
@@ -30,99 +58,89 @@ const Placements = () => {
           transition={{ duration: 0.8 }}
         >
           <FaBrain className="text-6xl text-blue-600 animate-pulse mb-4" />
-          <h1 className="text-5xl font-bold text-blue-900 mb-4">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
             AIML Department Placements & Careers
           </h1>
-          <p className="text-lg text-gray-700 max-w-2xl">
+          <p className="text-lg text-gray-600 max-w-2xl">
             Empowering students with cutting-edge AI and ML career opportunities in top tech companies.
           </p>
         </motion.div>
       </section>
 
-      <section className="mb-12 text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">Placement Statistics</h2>
+      <section className="mb-16 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">Placement Statistics</h2>
         <div className="grid md:grid-cols-3 gap-6">
-          <Card className="p-6 shadow-lg border-l-4 border-blue-500">
-            <h3 className="text-xl font-semibold text-blue-900">Placed Students</h3>
-            <p className="text-gray-700">{placementStats.placedPercentage}</p>
+          <Card className="p-6 shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-500 bg-white">
+            <h3 className="text-xl font-semibold text-gray-900">Placed Students</h3>
+            <p className="text-gray-600 text-2xl mt-2 font-bold">{placementStats.placedPercentage}</p>
           </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-green-500">
-            <h3 className="text-xl font-semibold text-blue-900">Highest Package</h3>
-            <p className="text-gray-700">{placementStats.highestPackage}</p>
+          <Card className="p-6 shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500 bg-white">
+            <h3 className="text-xl font-semibold text-gray-900">Highest Package</h3>
+            <p className="text-gray-600 text-2xl mt-2 font-bold">{placementStats.highestPackage}</p>
           </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-yellow-500">
-            <h3 className="text-xl font-semibold text-blue-900">Average Package</h3>
-            <p className="text-gray-700">{placementStats.averagePackage}</p>
+          <Card className="p-6 shadow-md hover:shadow-lg transition-shadow border-l-4 border-yellow-500 bg-white">
+            <h3 className="text-xl font-semibold text-gray-900">Average Package</h3>
+            <p className="text-gray-600 text-2xl mt-2 font-bold">{placementStats.averagePackage}</p>
           </Card>
         </div>
       </section>
 
-      <section className="mb-12 text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">Mandatory Internship Policy</h2>
-        <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-6">
+      {/* Interactive Analytics Section */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-10">Placement Analytics</h2>
+        <div className="grid lg:grid-cols-2 gap-8">
+          <Card className="p-6 shadow-md bg-white border border-gray-100">
+            <h3 className="text-xl font-semibold text-center text-gray-900 mb-6">Year-over-Year Placements</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={placementTrendData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.5} />
+                  <XAxis dataKey="year" stroke="#4b5563" />
+                  <YAxis stroke="#4b5563" />
+                  <RechartsTooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e5e7eb", color: "#111827" }} />
+                  <Legend />
+                  <Bar dataKey="studentsPlaced" name="Students Placed" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="highestPackage" name="Highest Package (LPA)" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="p-6 shadow-md bg-white border border-gray-100">
+            <h3 className="text-xl font-semibold text-center text-gray-900 mb-6">Top Recruiting Domains</h3>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={domainData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {domainData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e5e7eb", color: "#111827" }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      <section className="mb-12 text-center bg-gray-50 border border-gray-100 p-8 rounded-2xl shadow-sm">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6">Mandatory Internship Policy</h2>
+        <p className="text-lg text-gray-600 max-w-4xl mx-auto mb-6">
           As per AICTE norms, every engineering student must complete internships during their 4-year course. Failure to do so may result in not receiving the degree certificate.
         </p>
-        <a href="https://www.aicte-ndia.org/sites/default/files/Aicte%20Internship%20Policy-%2002.04.2019.pdf" target="_blank" className="text-blue-600 underline">
-          AICTE Internship Policy – 02.04.2019
+        <a href="https://www.aicte-ndia.org/sites/default/files/Aicte%20Internship%20Policy-%2002.04.2019.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center text-blue-600 font-medium hover:underline">
+          View AICTE Internship Policy
         </a>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">Training & Placement Committee</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Dr. Prerana Shrivastava</h3>
-            <p className="text-gray-700">Training and Placement Officer</p>
-            <p className="text-gray-700">Mobile: 9820319770</p>
-            <p className="text-gray-700">Email: Ltcoe.tpo@gmail.com</p>
-          </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Dr. Jayesh Dange</h3>
-            <p className="text-gray-700">Dean Training and Entrepreneurship Cell</p>
-            <p className="text-gray-700">Email: jayesh.dange111@gmail.com</p>
-          </Card>
-        </div>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">Training Activities</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Technical Training</h3>
-            <p className="text-gray-700">Dr. Smita S. Ambarkar, Prof. Vrushali Bendre, Prof. Krishna Dwivedi, Prof. Ujjawala Tade</p>
-            <ul className="list-disc pl-5 text-gray-700">
-              <li>Technical Seminars / Webinars</li>
-              <li>Technical Workshops</li>
-              <li>Technical Trainings</li>
-            </ul>
-          </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Mock Tests</h3>
-            <p className="text-gray-700">Prof. Savitha Devaraj, Prof. Rakhi D. Akhare, Prof. Ujjawala Pandarkar, Prof. Devidas Chikhale</p>
-            <ul className="list-disc pl-5 text-gray-700">
-              <li>Mock Aptitude Tests</li>
-              <li>Mock Programming Tests</li>
-              <li>Mock Technical Tests</li>
-            </ul>
-          </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Soft Skills & Interview Preparation</h3>
-            <p className="text-gray-700">Prof. Geetha G, Dr. Rashmi Rani</p>
-            <ul className="list-disc pl-5 text-gray-700">
-              <li>Soft Skills Training Workshops</li>
-              <li>Group Discussion Trainings</li>
-              <li>Personal Interview Trainings</li>
-            </ul>
-          </Card>
-          <Card className="p-6 shadow-lg border-l-4 border-gray-500">
-            <h3 className="text-xl font-semibold text-blue-900">Career Guidance</h3>
-            <p className="text-gray-700">Prof. Rekha Sonavane, Prof. Swati Chaudhary, Prof. Sheshmal S. Shingne</p>
-            <ul className="list-disc pl-5 text-gray-700">
-              <li>Career Guidance Seminars / Webinars</li>
-              <li>GATE / MBA / MS / GRE / IELTS / Competitive Exams Preparation</li>
-            </ul>
-          </Card>
-        </div>
       </section>
     </div>
   );

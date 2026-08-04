@@ -18,7 +18,8 @@ export const registerAdmin = asyncHandler(async (req, res) => {
         const newAdmin = new Admin({
             fullname,
             email,
-            password
+            password,
+            role: req.assignedRole
         });
 
         await newAdmin.save();
@@ -160,6 +161,28 @@ export const deleteAnnouncement = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, message: "announcement deleted successfully" });
 });
 
+export const updateAnnouncement = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new ApiError(400, "Invalid announcement ID format");
+    }
+    if (!text || typeof text !== "string" || !text.trim()) {
+        throw new ApiError(400, "Announcement text is required");
+    }
+
+    const announcement = await Announcement.findByIdAndUpdate(id, { text }, { new: true });
+    if (!announcement) {
+        throw new ApiError(404, "Announcement not found");
+    }
+
+    const io = req.app.get("io");
+    if (io) io.emit("update-announcement", announcement);
+
+    res.status(200).json({ success: true, announcement });
+});
+
 
 
 //Notices
@@ -208,6 +231,28 @@ export const deleteNotice = asyncHandler(async (req, res) => {
     io.emit("delete-notice", id);  // Send deleted notice ID to clients
 
     res.status(200).json({ success: true, message: "Notice deleted successfully" });
+});
+
+export const updateNotice = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new ApiError(400, "Invalid notice ID format");
+    }
+    if (!text || typeof text !== "string" || !text.trim()) {
+        throw new ApiError(400, "Notice text is required");
+    }
+
+    const notice = await Notice.findByIdAndUpdate(id, { text }, { new: true });
+    if (!notice) {
+        throw new ApiError(404, "Notice not found");
+    }
+
+    const io = req.app.get("io");
+    if (io) io.emit("update-notice", notice);
+
+    res.status(200).json({ success: true, notice });
 });
 
 //---------------------------------------=------=------=------=-----------------------------------------//

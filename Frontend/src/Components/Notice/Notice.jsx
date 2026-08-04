@@ -31,6 +31,7 @@ export default function Notice() {
     return () => {
       socket.off("new-notice");
       socket.off("delete-notice");
+      socket.disconnect();
     };
   }, []);
 

@@ -47,8 +47,8 @@ const AuditLogs = () => {
 
             {/* Logs Table */}
             {!loading && logs.length > 0 ? (
-                <div className="bg-white p-4 rounded-lg shadow-lg overflow-x-auto">
-                    <table className="min-w-full border-collapse">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse min-w-[800px]">
                         <thead>
                             <tr className="bg-gray-800 text-white">
                                 <th className="border px-4 py-3 text-left">Admin</th>

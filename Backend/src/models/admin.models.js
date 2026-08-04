@@ -6,6 +6,11 @@ const adminSchema = new Schema({
     fullname: {
         type: String
     },
+    role: {
+        type: String,
+        enum: ["superadmin", "faculty"],
+        default: "faculty"
+    },
     email: {
         type: String,
         unique: true,

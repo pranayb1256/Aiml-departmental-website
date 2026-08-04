@@ -152,6 +152,7 @@ const Results = () => {
         loading={loading}
         rowKey="_id"
         className="mt-4"
+        scroll={{ x: 'max-content' }}
       />
 
       <Modal

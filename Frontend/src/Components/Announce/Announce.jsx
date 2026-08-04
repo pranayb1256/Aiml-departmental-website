@@ -30,6 +30,7 @@ export default function Announce() {
         return () => {
             socket.off("new-announcement");
             socket.off("delete-announcement");
+            socket.disconnect();
         };
     }, []);
 

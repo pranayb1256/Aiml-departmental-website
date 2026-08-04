@@ -29,9 +29,12 @@
 | **Dynamic Homepage** | Engaging landing page with hero sections, image carousels, and announcements |
 | **Faculty Directory** | Comprehensive profiles of teaching and non-teaching staff |
 | **Academic Programs** | Detailed information about courses, curriculum, and syllabi |
-| **Events & News** | Real-time updates on seminars, workshops, and conferences |
-| **Placements** | Showcase of placement statistics and placed students |
-| **Photo Gallery** | Beautiful masonry layout gallery for department activities |
+| **Events & News** | Live hackathon countdowns, past winners showcase, and real-time event updates |
+| **Placements** | Showcase of placement statistics, interactive analytics charts, and top domains |
+| **Resources & PYQs** | Download hub for syllabi, lab manuals, and previous year question papers |
+| **Innovation Showcase** | Directory of student projects and faculty research publications |
+| **Certificate Verifier** | Instant verification portal for digital event certificates with PDF download |
+| **Command Palette** | Global CMD+K quick search navigation for instant access to resources |
 | **Alumni Network** | Connection platform for department alumni |
 
 ### 🔐 Admin Dashboard
@@ -56,8 +59,10 @@ Framer Motion    → Smooth animations
 GSAP             → Advanced animations
 Material UI      → Component library
 Zustand          → Lightweight state management
-React Router 7   → Client-side routing
+React Router 7   → Client-side routing with React.lazy Code Splitting
 Socket.IO        → Real-time communication
+jsPDF            → Client-side PDF generation
+Recharts         → Interactive data visualization
 ```
 
 ### Backend
@@ -111,6 +116,18 @@ Multer           → File upload handling
 │
 └── 📄 README.md
 ```
+
+---
+
+## 🆕 Recent Updates (v1.1)
+
+- **Mobile Responsiveness**: Rebuilt the Admin Dashboard with a collapsible sliding sidebar and hamburger menu for seamless usage on phones and tablets.
+- **UI Consistency**: Fully transitioned all legacy dark-mode admin pages (Notices, Announcements, Club Events) and public portals (Events, Team Members) to a premium, unified Light Mode aesthetic.
+- **Bug Fixes**: 
+  - Fixed event data mappings (`event.dateTime`) to ensure public events render correctly.
+  - Resolved `react-dropzone` MIME type restrictions so image previews and uploads for events work perfectly across all browsers.
+  - Patched Dashboard layout constraints to ensure pages with long tables/forms can scroll smoothly.
+  - Enhanced API Middleware to securely prioritize explicit Bearer tokens over legacy cookies.
 
 ---
 
